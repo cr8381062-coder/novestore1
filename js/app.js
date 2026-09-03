@@ -1,105 +1,500 @@
-// ===== NOVE STORE =====
+// ===== NOVE STORE - MAIN APPLICATION =====
+
 const APP = {
   ADMIN_EMAIL: 'cr8381062@gmail.com',
   STORE_NAME: 'Nove Store',
   STORE_LOGO: '',
-  PAYPAL_CLIENT_ID: '', // optional placeholder
-  lang: 'ar',
+  PAYPAL_CLIENT_ID: 'AdZijgGKQiP5hkM7nWSUQgVFH4dBS8K5SuClk9n9B1NP6KHUTe84pTcjVWBF7fIe8IZ-XXxhfJ0SegzO',
+  GOOGLE_CLIENT_ID: '410210397515-tv7ek2artd1jlllghmk1d3493g1gurjc.apps.googleusercontent.com',
+
   currentUser: null,
   products: [],
   cart: [],
   orders: [],
+  categories: [],
+  lang: 'ar',
 
-  translations: {
+  // ===== TRANSLATIONS =====
+  TR: {
     ar: {
-      welcome: 'مرحباً',
+      store_slogan: 'Premium scripts for FiveM & Discord servers',
+      nav_products: 'المنتجات',
+      nav_features: 'المميزات',
+      nav_about: 'من نحن',
       sign_in: 'تسجيل الدخول',
       sign_out: 'تسجيل الخروج',
-      admin_panel: 'لوحة الإدارة',
+      admin_panel: 'لوحة التحكم',
       store: 'المتجر',
-      admin_staff: 'إضافة مشرف',
-      dashboard: 'لوحة المعلومات',
-      products_manage: 'المنتجات',
-      categories_manage: 'التصنيفات',
-      orders_manage: 'الطلبات',
-      users_manage: 'المستخدمون',
-      settings_manage: 'الإعدادات',
-      access_denied: 'الدخول مرفوض',
-      access_denied_desc: 'أنت غير مخول بالدخول إلى لوحة الإدارة.',
-      back_to_store: 'العودة إلى المتجر',
+      hero_badge: 'منتجات فايف ام وديسكورد الفاخرة',
+      hero_title1: 'سكريبتات احترافية لسيرفرك',
+      hero_title2: 'فايف ام وديسكورد',
+      hero_desc: 'أدوات احترافية للمسؤولين، جودة مضمونة ودعم على مدار الساعة.',
       browse: 'تصفح المنتجات',
       learn_more: 'اعرف المزيد',
+      happy_customers: 'عميل سعيد',
+      premium_products: 'منتج مميز',
+      support_247: 'دعم 24/7',
+      orders_completed: 'طلب مكتمل',
       our_products: 'منتجاتنا',
-      our_products_desc: 'سكربتات وبوتات احترافية لسيرفرات FiveM و Discord',
+      our_products_desc: 'سكريبتات وبوتات احترافية لسيرفراتك',
       all: 'الكل',
-      add_to_cart: 'أضف إلى السلة',
+      in_cart: 'في السلة',
+      add_to_cart: 'أضف للسلة',
+      why_us: 'لماذا Nove Store؟',
+      why_us_desc: 'نوفر الجودة والدعم والموثوقية',
+      inst_delivery: 'توصيل فوري',
+      inst_delivery_desc: 'احصل على منتجاتك فور الدفع بدون انتظار.',
+      secure_payment: 'دفع آمن',
+      secure_payment_desc: 'مدفوعات آمنة عبر باي بال والبيانات محمية.',
+      updates: 'تحديثات دورية',
+      updates_desc: 'جميع المنتجات تحصل على تحديثات وتحسينات مستمرة.',
+      support247: 'دعم متواصل',
+      support247_desc: 'فريق الدعم متواجد على مدار الساعة في الديسكورد.',
+      easy_setup: 'إعداد سهل',
+      easy_setup_desc: 'جميع المنتجات تأتي مع توثيق مفصل وتثبيت سهل.',
+      quality_code: 'كود عالي الجودة',
+      quality_code_desc: 'كود نظيف ومحسّن يمكنك الوثوق به.',
+      about_title: 'عن Nove Store',
+      about_desc: 'Nove Store سوق مميز لسكريبتات فايف ام وبوتات الديسكورد والأدوات. نتخصص في توفير منتجات عالية الجودة تساعدك في بناء وإدارة مجتمعاتك.',
+      about_desc2: 'مهمتنا تقديم أدوات بمستوى احترافي بأسعار مناسبة ودعم استثنائي. كل منتج مُختبَر وموثّق ومعه تحديثات مجانية.',
+      footer_rights: '© 2026 Nove Store. جميع الحقوق محفوظة.',
+      your_cart: 'سلة المشتريات',
+      cart_selected: 'المنتجات المختارة',
+      cart_empty: 'سلتك فارغة',
+      total: 'الإجمالي',
+      pay_paypal: 'ادفع عبر باي بال',
+      remove: 'حذف',
+      signin_title: 'أهلاً بك في Nove Store',
+      signin_desc: 'سجل دخولك لتتمكن من الشراء وإدارة طلباتك',
+      google_signin: 'تسجيل الدخول عبر جوجل',
+      terms_note: 'بموجب تسجيل الدخول فأنت توافق على شروط الخدمة وسياسة الخصوصية',
+      tab_login: 'تسجيل الدخول',
+      tab_register: 'إنشاء حساب',
       email_label: 'البريد الإلكتروني',
       password_label: 'كلمة المرور',
       name_label: 'الاسم الكامل',
-      tab_login: 'تسجيل الدخول',
-      tab_register: 'إنشاء حساب',
-      fill_all_fields: 'يرجى ملء جميع الحقول',
-      password_short: 'كلمة المرور قصيرة جداً',
-      email_exists: 'البريد الإلكتروني موجود بالفعل',
-      wrong_credentials: 'بيانات الدخول غير صحيحة',
-      cart_empty: 'سلتك فارغة',
-      checkout: 'إتمام الشراء',
-      remove: 'حذف'
+      or_label: 'أو',
+      fill_all_fields: 'الرجاء تعبئة جميع الحقول',
+      password_short: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
+      email_exists: 'هذا البريد مسجل مسبقاً',
+      wrong_credentials: 'البريد أو كلمة المرور غير صحيحة',
+      welcome_back: 'مرحباً بعودتك',
+      welcome: 'مرحباً',
+      added_cart: 'تمت الإضافة للسلة',
+      already_cart: 'المنتج موجود بالفعل في السلة',
+      order_confirmed: 'تم تأكيد الطلب!',
+      order_success_desc: 'شكراً لشرائك. رقم طلبك:',
+      order_success_extra1: 'سيتم إرسال تأكيد إلى بريدك الإلكتروني.',
+      order_success_extra2: 'يمكنك تحميل منتجاتك من سيرفر الديسكورد.',
+      back_to_store: 'العودة للمتجر',
+      payment_failed: 'فشل الدفع. حاول مرة أخرى.',
+      cart_empty_err: 'سلتك فارغة',
+      please_signin: 'الرجاء تسجيل الدخول لإتمام الشراء',
+      paypal_click: 'اضغط زر باي بال بالأعلى للدفع',
+      order_confirmed_toast: 'طلبك المؤكد',
+      fivem: 'فايف ام',
+      discord: 'ديسكورد',
+      usd: 'دولار',
+      category: 'التصنيف',
+      description: 'الوصف',
+      features: 'المميزات',
+      categories_manage: 'تصنيفات المنتجات',
+      categories_sub: 'أضف وأنشئ تصنيفات لمنتجاتك',
+      add_category: 'إضافة تصنيف',
+      category_name: 'اسم التصنيف',
+      category_icon: 'أيقونة التصنيف (إيموجي)',
+      num_products: 'منتجات',
+      no_categories: 'لا توجد تصنيفات بعد',
+      add_cat_toast: 'تمت إضافة التصنيف!',
+      updated_cat_toast: 'تم تحديث التصنيف!',
+      deleted_cat_toast: 'تم حذف التصنيف',
+      delete_cat_confirm: 'هل أنت متأكد من حذف هذا التصنيف؟ سيتم نقل منتجاته إلى تصنيف عام.',
+      account_link: 'رابط الحساب / البرنامج',
+      account_link_hint: 'ضع رابط تسليم البرنامج أو حسابك (فيسر، ديسكورد، رابط تحميل...)',
+      account_link_ph: 'https://...',
+      rec_account_link: 'رابط الحساب / البرنامج',
+      delivery: 'التسليم',
+      without_link: 'بدون رابط',
+      builtin: 'مدمج',
+      general: 'عام',
+      // Admin
+      admin_welcome: 'مرحباً بعودتك',
+      group_overview: 'نظرة عامة',
+      group_management: 'الإدارة',
+      group_system: 'النظام',
+      dashboard: 'لوحة التحكم',
+      products_manage: 'المنتجات',
+      orders_manage: 'الطلبات',
+      users_manage: 'المستخدمون',
+      settings_manage: 'الإعدادات',
+      total_revenue: 'إجمالي الإيرادات',
+      total_orders: 'إجمالي الطلبات',
+      products_count: 'المنتجات',
+      active_products: 'منتجات نشطة',
+      revenue_week: 'الإيرادات هذا الأسبوع',
+      view_all: 'عرض الكل',
+      latest_orders: 'آخر الطلبات',
+      recent_orders: 'طلبات حديثة',
+      no_orders: 'لا توجد طلبات بعد',
+      customer: 'العميل',
+      products: 'المنتجات',
+      status: 'الحالة',
+      date: 'التاريخ',
+      order: 'الطلب',
+      name: 'الاسم',
+      email: 'البريد الإلكتروني',
+      joined: 'تاريخ الانضمام',
+      role: 'الدور',
+      owner: 'المالك',
+      customer_role: 'زبون',
+      active: 'نشط',
+      inactive: 'غير نشط',
+      pending: 'قيد الانتظار',
+      completed: 'مكتمل',
+      edit: 'تعديل',
+      delete: 'حذف',
+      add_product: 'إضافة منتج',
+      edit_product: 'تعديل المنتج',
+      add_new_product: 'إضافة منتج جديد',
+      back: 'رجوع',
+      save: 'حفظ',
+      update: 'تحديث',
+      product_name: 'اسم المنتج',
+      price_usd: 'السعر (دولار)',
+      product_desc: 'وصف المنتج',
+      product_icon: 'الأيقونة (إيموجي)',
+      one_per_line: 'ميزة في كل سطر',
+      sales: 'المبيعات',
+      actions: 'إجراءات',
+      price: 'السعر',
+      category_label: 'التصنيف',
+      product_info: 'معلومات المنتج',
+      new_product_details: 'تفاصيل منتج جديد',
+      manage_products_sub: 'إدارة منتجات فايف ام والديسكورد',
+      add_new_product: 'إضافة منتج جديد',
+      back_to_products: 'رجوع للمنتجات',
+      update_product_details: 'تحديث تفاصيل المنتج',
+      create_new_listing: 'أنشئ قائمة منتج جديد',
+      update_product: 'تحديث المنتج',
+      delete_confirm: 'هل أنت متأكد من حذف هذا المنتج؟',
+      no_sales_yet: 'لا مبيعات بعد',
+      active_sales: 'مبيعات نشطة',
+      new_signups: 'تسجيلات جديدة',
+      total_users: 'إجمالي المستخدمين',
+      admins: 'المشرفون',
+      customers_label: 'الزبائن',
+      registered_users: 'حسابات مسجلة في متجرك',
+      store_config: 'إعدادات المتجر',
+      store_name: 'اسم المتجر',
+      owner_email: 'إيميل المالك (المشرف)',
+      owner_email_hint: 'هذا الإيميل فقط لديه صلاحية المشرف.',
+      paypal_integration: 'تكامل باي بال',
+      paypal_client: 'مفتاح باي بال العام',
+      paypal_hint: 'متوفر في لوحة مطوري باي بال. تصل المدفوعات إلى حسابك.',
+      google_signin_setup: 'تسجيل الدخول عبر جوجل',
+      google_client: 'مفتاح جوجل العام',
+      google_hint: 'مطلوب لتسجيل الدخول عبر جوجل. متوفر في Google Cloud Console.',
+      save_all: 'حفظ جميع الإعدادات',
+      edit_product: 'تعديل المنتج',
+      order_success_sub: 'تتبع مبيعاتك وسجل الطلبات',
+      total_badge: 'إجمالي',
+      guest: 'زائر',
+      settings: 'الإعدادات',
+      saved: 'تم الحفظ!',
+      added_toast: 'تمت الإضافة!',
+      updated_toast: 'تم التحديث!',
+      deleted_toast: 'تم الحذف',
+      access_denied: 'غير مصرح',
+      access_denied_desc: 'ليس لديك صلاحية الدخول للوحة التحكم.',
+      language_label: 'اللغة',
+      // Roles & staff
+      admin_staff: 'إدارة الأدمن',
+      admin_staff_sub: 'أضف صلاحيات إدارية لفريقك',
+      add_admin: 'إضافة أدمن',
+      staff_role: 'الرتبة',
+      role_owner: 'Owner',
+      role_supervisor: 'Supervisor',
+      role_admin: 'Admin',
+      role_customer: 'زبون',
+      admin_note: 'فقط المالك (Owner) يستطيع إدارة الأدمن.',
+      no_staff: 'لا يوجد أعضاء إدارة بعد',
+      remove_admin: 'إزالة الصلاحية',
+      remove_admin_confirm: 'هل أنت متأكد من إزالة الصلاحية الإدارية من هذا المستخدم؟',
+      staff_added: 'تمت إضافة عضو الإدارة!',
+      staff_removed: 'تمت إزالة الصلاحية',
+      owners_only: 'هذه الصلاحية للمالك فقط',
+      group_people: 'الأشخاص',
+      // Permissions / access
+      perm_dashboard: 'لوحة التحكم والإحصائيات',
+      perm_products: 'إضافة وتعديل المنتجات',
+      perm_orders: 'عرض الطلبات',
+      perm_users: 'إدارة المستخدمين',
+      perm_categories: 'إدارة التصنيفات',
+      perm_settings: 'إعدادات المتجر',
+      perm_paypal: 'تغيير إعدادات باي بال',
+      // Logo
+      store_logo: 'لوقو المتجر',
+      upload_logo: 'رفع اللوقو',
+      upload_logo_hint: 'اختر صورة من جهازك (PNG, JPG, SVG). سيتم حفظها تلقائياً.',
+      remove_logo: 'إزالة اللوقو',
+      logo_uploaded: 'تم رفع اللوقو!',
+      // Product image
+      product_image: 'صورة المنتج',
+      product_image_hint: 'ارفع صورة للمنتج (PNG, JPG). اختياري.',
+      remove_image: 'إزالة الصورة',
+      image_too_large: 'الصورة كبيرة جداً (الحد الأقصى 2MB)'
     },
     en: {
-      welcome: 'Welcome',
-      sign_in: 'Sign Out',
+      store_slogan: 'Premium scripts for FiveM & Discord servers',
+      nav_products: 'Products',
+      nav_features: 'Features',
+      nav_about: 'About',
+      sign_in: 'Sign In',
       sign_out: 'Sign Out',
       admin_panel: 'Admin Panel',
       store: 'Store',
-      admin_staff: 'Add Admin',
-      dashboard: 'Dashboard',
-      products_manage: 'Products',
-      categories_manage: 'Categories',
-      orders_manage: 'Orders',
-      users_manage: 'Users',
-      settings_manage: 'Settings',
-      access_denied: 'Access Denied',
-      access_denied_desc: 'You are not authorized to access the admin panel.',
-      back_to_store: 'Back to Store',
+      hero_badge: 'Premium FiveM & Discord Products',
+      hero_title1: 'Premium Scripts & Bots',
+      hero_title2: 'For Your Server',
+      hero_desc: 'Professional tools for serious server owners. Quality guaranteed, 24/7 support.',
       browse: 'Browse Products',
       learn_more: 'Learn More',
+      happy_customers: 'Happy Customers',
+      premium_products: 'Premium Products',
+      support_247: '24/7 Support',
+      orders_completed: 'Orders Completed',
       our_products: 'Our Products',
-      our_products_desc: 'Professional scripts and bots for your FiveM and Discord servers',
+      our_products_desc: 'Professional scripts & bots for your servers',
       all: 'All',
+      in_cart: 'In Cart',
       add_to_cart: 'Add to Cart',
+      why_us: 'Why Nove Store?',
+      why_us_desc: 'We deliver quality, support & reliability',
+      inst_delivery: 'Instant Delivery',
+      inst_delivery_desc: 'Get products instantly after payment. No waiting.',
+      secure_payment: 'Secure Payment',
+      secure_payment_desc: 'Safe payments via PayPal. Your data is protected.',
+      updates: 'Regular Updates',
+      updates_desc: 'All products receive regular updates & improvements.',
+      support247: '24/7 Support',
+      support247_desc: 'Our support team is available around the clock on Discord.',
+      easy_setup: 'Easy Setup',
+      easy_setup_desc: 'All products come with detailed docs & easy install.',
+      quality_code: 'Quality Code',
+      quality_code_desc: 'Clean, optimized, well-documented code you can trust.',
+      about_title: 'About Nove Store',
+      about_desc: 'Nove Store is a premium marketplace for FiveM scripts, Discord bots & gaming resources. We specialize in high-quality products for your gaming communities.',
+      about_desc2: 'Our mission is professional-grade tools at fair prices with exceptional support. Every product is tested, documented & comes with free updates.',
+      footer_rights: '© 2026 Nove Store. All rights reserved.',
+      your_cart: 'Your Cart',
+      cart_selected: 'Your selected products',
+      cart_empty: 'Your cart is empty',
+      total: 'Total',
+      pay_paypal: 'Pay with PayPal',
+      remove: 'Remove',
+      signin_title: 'Welcome to Nove Store',
+      signin_desc: 'Sign in to make purchases and manage your orders',
+      google_signin: 'Sign in with Google',
+      terms_note: 'By signing in, you agree to our Terms of Service and Privacy Policy',
+      tab_login: 'Login',
+      tab_register: 'Register',
       email_label: 'Email',
       password_label: 'Password',
       name_label: 'Full Name',
-      tab_login: 'Login',
-      tab_register: 'Register',
-      fill_all_fields: 'Please fill all fields',
-      password_short: 'Password is too short',
-      email_exists: 'Email already exists',
-      wrong_credentials: 'Invalid credentials',
-      cart_empty: 'Your cart is empty',
-      checkout: 'Checkout',
-      remove: 'Remove'
+      or_label: 'or',
+      fill_all_fields: 'Please fill in all fields',
+      password_short: 'Password must be at least 6 characters',
+      email_exists: 'This email is already registered',
+      wrong_credentials: 'Incorrect email or password',
+      welcome_back: 'Welcome back',
+      welcome: 'Welcome',
+      added_cart: 'added to cart',
+      already_cart: 'Product already in cart',
+      order_confirmed: 'Order Confirmed!',
+      order_success_desc: 'Thank you for your purchase. Your order ID:',
+      order_success_extra1: 'A confirmation will be sent to your email.',
+      order_success_extra2: 'You can download your products from the Discord server.',
+      back_to_store: 'Back to Store',
+      payment_failed: 'Payment failed. Please try again.',
+      cart_empty_err: 'Your cart is empty',
+      please_signin: 'Please sign in to complete purchase',
+      paypal_click: 'Please click the PayPal button above to pay',
+      order_confirmed_toast: 'Order confirmed',
+      fivem: 'FiveM',
+      discord: 'Discord',
+      usd: 'USD',
+      category: 'Category',
+      description: 'Description',
+      features: 'Features',
+      categories_manage: 'Product Categories',
+      categories_sub: 'Create and manage your product categories',
+      add_category: 'Add Category',
+      category_name: 'Category Name',
+      category_icon: 'Category Icon (emoji)',
+      num_products: 'Products',
+      no_categories: 'No categories yet',
+      add_cat_toast: 'Category added!',
+      updated_cat_toast: 'Category updated!',
+      deleted_cat_toast: 'Category deleted',
+      delete_cat_confirm: 'Are you sure you want to delete this category? Its products will move to General.',
+      account_link: 'Account / Program Link',
+      account_link_hint: 'Put your delivery link or account (discord, download, fivem server...)',
+      account_link_ph: 'https://...',
+      rec_account_link: 'Account / Program Link',
+      delivery: 'Delivery',
+      without_link: 'No link',
+      builtin: 'Built-in',
+      general: 'General',
+      // Admin
+      admin_welcome: 'Welcome back',
+      group_overview: 'Overview',
+      group_management: 'Management',
+      group_system: 'System',
+      dashboard: 'Dashboard',
+      products_manage: 'Products',
+      orders_manage: 'Orders',
+      users_manage: 'Users',
+      settings_manage: 'Settings',
+      total_revenue: 'Total Revenue',
+      total_orders: 'Total Orders',
+      products_count: 'Products',
+      active_products: 'Active Products',
+      revenue_week: 'Revenue This Week',
+      view_all: 'View all',
+      latest_orders: 'Latest Orders',
+      recent_orders: 'Recent Orders',
+      no_orders: 'No orders yet',
+      customer: 'Customer',
+      products: 'Products',
+      status: 'Status',
+      date: 'Date',
+      order: 'Order',
+      name: 'Name',
+      email: 'Email',
+      joined: 'Joined',
+      role: 'Role',
+      owner: 'Owner',
+      customer_role: 'Customer',
+      active: 'Active',
+      inactive: 'Inactive',
+      pending: 'Pending',
+      completed: 'Completed',
+      edit: 'Edit',
+      delete: 'Delete',
+      add_product: 'Add Product',
+      edit_product: 'Edit Product',
+      add_new_product: 'Add New Product',
+      back: 'Back',
+      save: 'Save',
+      update: 'Update',
+      product_name: 'Product Name',
+      price_usd: 'Price (USD)',
+      product_desc: 'Description',
+      product_icon: 'Icon (emoji)',
+      one_per_line: 'Features (one per line)',
+      sales: 'Sales',
+      actions: 'Actions',
+      price: 'Price',
+      category_label: 'Category',
+      product_info: 'Product Information',
+      new_product_details: 'New Product Details',
+      manage_products_sub: 'Manage your FiveM & Discord products',
+      add_new_product: 'Add New Product',
+      back_to_products: 'Back to Products',
+      update_product_details: 'Update product details',
+      create_new_listing: 'Create a new product listing',
+      update_product: 'Update Product',
+      delete_confirm: 'Are you sure you want to delete this product?',
+      no_sales_yet: 'No sales yet',
+      active_sales: 'Active sales',
+      new_signups: 'New sign-ups',
+      total_users: 'Total Users',
+      admins: 'Admins',
+      customers_label: 'Customers',
+      registered_users: 'Registered accounts on your store',
+      store_config: 'Store Configuration',
+      store_name: 'Store Name',
+      owner_email: 'Owner Email (Admin)',
+      owner_email_hint: 'Only this email has admin access.',
+      paypal_integration: 'PayPal Integration',
+      paypal_client: 'PayPal Client ID',
+      paypal_hint: 'Found in PayPal Developer dashboard. Payments go to your account.',
+      google_signin_setup: 'Google Sign-In',
+      google_client: 'Google Client ID',
+      google_hint: 'Required for Google login. Available in Google Cloud Console.',
+      save_all: 'Save All Settings',
+      edit_product: 'Edit Product',
+      order_success_sub: 'Track your sales and order history',
+      total_badge: 'total',
+      guest: 'Guest',
+      settings: 'Settings',
+      saved: 'Settings saved!',
+      added_toast: 'Added!',
+      updated_toast: 'Updated!',
+      deleted_toast: 'Deleted',
+      access_denied: 'Access Denied',
+      access_denied_desc: "You don't have permission to access the admin panel.",
+      language_label: 'Language',
+      // Roles & staff (English)
+      admin_staff: 'Add Admin',
+      admin_staff_sub: "Add admin permissions to your team",
+      add_admin: 'Add Admin',
+      staff_role: 'Role',
+      role_owner: 'Owner',
+      role_supervisor: 'Supervisor',
+      role_admin: 'Admin',
+      role_customer: 'Customer',
+      admin_note: 'Only the Owner can manage admins.',
+      no_staff: 'No admin members yet',
+      remove_admin: 'Remove Permission',
+      remove_admin_confirm: 'Are you sure you want to remove the admin permission from this user?',
+      staff_added: 'Admin member added!',
+      staff_removed: 'Permission removed',
+      owners_only: 'This permission is reserved for the Owner',
+      group_people: 'People',
+      staff_email_hint: 'Only registered customer accounts can be promoted by their email.',
+      // Logo (English)
+      store_logo: 'Store Logo',
+      upload_logo: 'Upload Logo',
+      upload_logo_hint: 'Choose an image from your device (PNG, JPG, SVG). It will be saved automatically.',
+      remove_logo: 'Remove Logo',
+      logo_uploaded: 'Logo uploaded!',
+      // Product image (English)
+      product_image: 'Product Image',
+      product_image_hint: 'Upload an image (PNG, JPG). Optional.',
+      remove_image: 'Remove Image',
+      image_too_large: 'Image is too large (max 2MB)'
     }
   },
 
   t(key) {
-    return (this.translations[this.lang] && this.translations[this.lang][key]) ||
-           (this.translations.en && this.translations.en[key]) || key;
+    return (this.TR[this.lang] && this.TR[this.lang][key]) || this.TR.en[key] || key;
   },
 
   setLang(lang) {
-    this.lang = lang;
-    localStorage.setItem('nove_lang', lang);
+    this.lang = lang === 'en' ? 'en' : 'ar';
+    localStorage.setItem('nove_lang', this.lang);
+    document.documentElement.setAttribute('lang', this.lang);
+    document.documentElement.setAttribute('dir', this.lang === 'ar' ? 'rtl' : 'ltr');
+    document.body.classList.toggle('lang-en', this.lang === 'en');
     this.applyStaticTranslations();
+    const isAdminPage = window.location.pathname.includes('admin.html');
+    if (isAdminPage) {
+      const activeNav = document.querySelector('.admin-nav-item.active');
+      const section = activeNav ? (activeNav.getAttribute('data-section') || 'dashboard') : 'dashboard';
+      this.showAdminSection(section);
+    } else {
+      this.renderCurrentPage();
+      this.updateHeroStats();
+      this.renderProducts();
+    }
+    const toggle = document.getElementById('lang-toggle');
+    if (toggle) toggle.textContent = this.lang === 'ar' ? 'EN' : 'ع';
   },
 
-  toggleLang() {
-    this.setLang(this.lang === 'ar' ? 'en' : 'ar');
-    const lt = document.getElementById('lang-toggle');
-    if (lt) lt.textContent = this.lang === 'ar' ? 'EN' : 'ع';
-    document.documentElement.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = this.lang;
+  decideDirection() {
+    const stored = localStorage.getItem('nove_lang') || 'ar';
+    this.lang = stored === 'en' ? 'en' : 'ar';
   },
 
   applyStaticTranslations() {
@@ -107,32 +502,174 @@ const APP = {
       const key = el.getAttribute('data-i18n');
       el.textContent = this.t(key);
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.setAttribute('placeholder', this.t(el.getAttribute('data-i18n-placeholder')));
+    });
+  },
+
+  toggleLang() {
+    this.setLang(this.lang === 'ar' ? 'en' : 'ar');
+  },
+
+  init() {
+    this.decideDirection();
+    this.loadSettings();
+    this.loadData();
+    this.checkAuth();
+    this.renderCurrentPage();
+    this.initNavbar();
+    this.initScrollEffects();
+    this.applyStaticTranslations();
+    this.applyLogo();
+    this.updateHeroStats();
+    this.createRainDrops();
+  },
+
+  updateHeroStats() {
+    const customersEl = document.getElementById('stat-customers');
+    const productsEl = document.getElementById('stat-products');
+    const ordersEl = document.getElementById('stat-orders');
+    const users = JSON.parse(localStorage.getItem('nove_users')) || [];
+    if (customersEl) customersEl.textContent = users.length;
+    if (productsEl) productsEl.textContent = this.products.filter(p => p.status === 'active').length || 9;
+    if (ordersEl) ordersEl.textContent = this.orders.length;
+  },
+
+  createRainDrops() {
+    if (document.querySelectorAll('.rain-drop').length > 0) return;
+    for (let i = 0; i < 14; i++) {
+      const drop = document.createElement('div');
+      drop.className = 'rain-drop';
+      drop.style.left = (Math.random() * 100) + '%';
+      drop.style.animationDuration = (6 + Math.random() * 8) + 's';
+      drop.style.animationDelay = (Math.random() * 10) + 's';
+      drop.style.height = (30 + Math.random() * 70) + 'px';
+      document.body.appendChild(drop);
+    }
+  },
+
+  loadSettings() {
+    const settings = JSON.parse(localStorage.getItem('nove_settings')) || {};
+    if (settings.storeName) this.STORE_NAME = settings.storeName;
+    if (settings.logo) this.STORE_LOGO = settings.logo;
+    if (settings.paypal && settings.paypal !== 'YOUR_PAYPAL_CLIENT_ID') this.PAYPAL_CLIENT_ID = settings.paypal;
+    // Always force the correct Google Client ID, overriding any stale saved value.
+    settings.google = this.GOOGLE_CLIENT_ID;
+    localStorage.setItem('nove_settings', JSON.stringify(settings));
   },
 
   // ===== DATA =====
-  getDefaultProducts() {
-    return [
-      { id: 'p1', name: 'ESX Starter Pack', category: 'fivem', price: 15.00, desc: 'Complete ESX base scripts for a fresh FiveM server.', image: '' },
-      { id: 'p2', name: 'QBCore Framework', category: 'fivem', price: 20.00, desc: 'Powerful QBCore framework with optimized resources.', image: '' },
-      { id: 'p3', name: 'Advanced Discord Bot', category: 'discord', price: 25.00, desc: 'Full-featured Discord bot with moderation and economy.', image: '' },
-      { id: 'p4', name: 'Admin Panel Plus', category: 'fivem', price: 12.00, desc: 'Enhanced admin panel with player management tools.', image: '' },
-      { id: 'p5', name: 'Discord Ticket Bot', category: 'discord', price: 18.00, desc: 'Ticket system bot for Discord support channels.', image: '' }
-    ];
-  },
-
   loadData() {
     this.products = JSON.parse(localStorage.getItem('nove_products')) || this.getDefaultProducts();
     this.cart = JSON.parse(localStorage.getItem('nove_cart')) || [];
     this.orders = JSON.parse(localStorage.getItem('nove_orders')) || [];
-    this.currentUser = JSON.parse(localStorage.getItem('nove_user')) || null;
-    this.lang = localStorage.getItem('nove_lang') || 'ar';
+    if (!localStorage.getItem('nove_products')) {
+      this.saveProducts();
+    }
   },
 
-  saveProducts() { localStorage.setItem('nove_products', JSON.stringify(this.products)); },
-  saveCart() { localStorage.setItem('nove_cart', JSON.stringify(this.cart)); },
-  saveOrders() { localStorage.setItem('nove_orders', JSON.stringify(this.orders)); },
+  saveProducts() {
+    localStorage.setItem('nove_products', JSON.stringify(this.products));
+  },
+
+  saveCart() {
+    localStorage.setItem('nove_cart', JSON.stringify(this.cart));
+    this.updateCartBadge();
+  },
+
+  saveOrders() {
+    localStorage.setItem('nove_orders', JSON.stringify(this.orders));
+  },
+
+  loadCategories() {
+    this.categories = JSON.parse(localStorage.getItem('nove_categories')) || [];
+    return this.categories;
+  },
+
+  saveCategories() {
+    localStorage.setItem('nove_categories', JSON.stringify(this.categories));
+    this.categories = this.categories || [];
+  },
+
+  getCategories() {
+    return this.loadCategories();
+  },
+
+  resolveCategoryLabel(catKey) {
+    if (catKey === 'fivem') return this.t('fivem');
+    if (catKey === 'discord') return this.t('discord');
+    if (catKey === 'general') return this.t('general');
+    const c = this.categories.find(x => x.key === catKey);
+    return c ? c.name : (catKey || this.t('general'));
+  },
+
+  getDefaultProducts() {
+    return [
+      {
+        id: 1, name: 'qb-core Framework Script', category: 'fivem', icon: '',
+        description: 'Complete QBCore framework script for FiveM with full features',
+        price: 49.99, features: ['Full source code', 'Documentation', 'Free updates', 'Discord support'],
+        status: 'active', sales: 156
+      },
+      {
+        id: 2, name: 'Discord Verification Bot', category: 'discord', icon: '',
+        description: 'Advanced verification bot for Discord servers with role management',
+        price: 29.99, features: ['Auto verification', 'Role assignment', 'Anti-raid', 'Logs'],
+        status: 'active', sales: 234
+      },
+      {
+        id: 3, name: 'ESX Essentials Pack', category: 'fivem', icon: '',
+        description: 'Essential scripts pack for ESX framework - jobs, inventory, and more',
+        price: 79.99, features: ['20+ scripts', 'MySQL support', 'Multi-language', '24/7 support'],
+        status: 'active', sales: 89
+      },
+      {
+        id: 4, name: 'Discord Ticket System', category: 'discord', icon: '',
+        description: 'Professional ticket system with categories and transcripts',
+        price: 19.99, features: ['Category support', 'Transcripts', 'Auto-close', 'Staff roles'],
+        status: 'active', sales: 312
+      },
+      {
+        id: 5, name: 'FiveM Launcher UI', category: 'fivem', icon: '',
+        description: 'Custom server launcher with modern dark UI design',
+        price: 39.99, features: ['Custom themes', 'Server info', 'Rules page', 'Discord widget'],
+        status: 'active', sales: 67
+      },
+      {
+        id: 6, name: 'Discord Music Bot', category: 'discord', icon: '',
+        description: 'Feature-rich music bot with playlist support and effects',
+        price: 24.99, features: ['Multi-platform', 'Queue system', 'Effects', '24/7 mode'],
+        status: 'active', sales: 178
+      },
+      {
+        id: 7, name: 'vMenu Custom Config', category: 'fivem', icon: '',
+        description: 'Pre-configured vMenu with custom options and permissions',
+        price: 14.99, features: ['30+ vehicles', 'Custom perms', 'Admin tools', 'Easy setup'],
+        status: 'active', sales: 201
+      },
+      {
+        id: 8, name: 'Discord Giveaway Bot', category: 'discord', icon: '',
+        description: 'Automated giveaway system with entry requirements',
+        price: 12.99, features: ['Requirements', 'Auto-pick', 'Reroll', 'Embeds'],
+        status: 'active', sales: 145
+      },
+      {
+        id: 9, name: 'Housing Script v2', category: 'fivem', icon: '',
+        description: 'Advanced housing system with interiors and furniture',
+        price: 59.99, features: ['50+ interiors', 'Furniture system', 'Keys', 'Renting'],
+        status: 'active', sales: 92
+      }
+    ];
+  },
 
   // ===== AUTH =====
+  checkAuth() {
+    const userData = localStorage.getItem('nove_user');
+    if (userData) {
+      this.currentUser = JSON.parse(userData);
+    }
+  },
+
   registerUser(user) {
     const users = JSON.parse(localStorage.getItem('nove_users')) || [];
     const existing = users.find(u => u.email === user.email);
@@ -143,8 +680,27 @@ const APP = {
     }
   },
 
-  isAdmin() {
-    return this.currentUser && this.currentUser.email === this.ADMIN_EMAIL;
+  finishGoogleLogin(googleUser) {
+    this.currentUser = {
+      id: googleUser.sub || 'google_' + Date.now(),
+      name: googleUser.name || 'Google User',
+      email: googleUser.email || '',
+      avatar: googleUser.picture || '',
+      isAdmin: googleUser.email === this.ADMIN_EMAIL,
+      joinedAt: new Date().toISOString()
+    };
+    this.registerUser(this.currentUser);
+    localStorage.setItem('nove_user', JSON.stringify(this.currentUser));
+    this.updateAuthUI();
+    this.closeModal('auth-modal');
+    this.showToast(this.t('welcome') + ', ' + this.currentUser.name + '!', 'success');
+  },
+
+  showAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
+    document.getElementById('auth-login-form').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('auth-register-form').style.display = tab === 'register' ? 'block' : 'none';
   },
 
   async hashPassword(password) {
@@ -159,14 +715,36 @@ const APP = {
     const name = document.getElementById('reg-name').value.trim();
     const email = document.getElementById('reg-email').value.trim().toLowerCase();
     const password = document.getElementById('reg-password').value;
-    if (!name || !email || !password) { this.showToast(this.t('fill_all_fields'), 'error'); return; }
-    if (password.length < 6) { this.showToast(this.t('password_short'), 'error'); return; }
+
+    if (!name || !email || !password) {
+      this.showToast(this.t('fill_all_fields'), 'error');
+      return;
+    }
+    if (password.length < 6) {
+      this.showToast(this.t('password_short'), 'error');
+      return;
+    }
+
     const users = JSON.parse(localStorage.getItem('nove_users')) || [];
-    if (users.find(u => u.email === email)) { this.showToast(this.t('email_exists'), 'error'); return; }
+    if (users.find(u => u.email === email)) {
+      this.showToast(this.t('email_exists'), 'error');
+      return;
+    }
+
     const hashed = await this.hashPassword(password);
-    const user = { id: 'email_' + Date.now(), name, email, password: hashed, avatar: '', isAdmin: email === this.ADMIN_EMAIL, joinedAt: new Date().toISOString() };
+    const user = {
+      id: 'email_' + Date.now(),
+      name: name,
+      email: email,
+      password: hashed,
+      avatar: '',
+      isAdmin: email === this.ADMIN_EMAIL,
+      joinedAt: new Date().toISOString()
+    };
+
     users.push(user);
     localStorage.setItem('nove_users', JSON.stringify(users));
+
     this.currentUser = { ...user };
     delete this.currentUser.password;
     localStorage.setItem('nove_user', JSON.stringify(this.currentUser));
@@ -179,11 +757,21 @@ const APP = {
     e.preventDefault();
     const email = document.getElementById('auth-email').value.trim().toLowerCase();
     const password = document.getElementById('auth-password').value;
-    if (!email || !password) { this.showToast(this.t('fill_all_fields'), 'error'); return; }
+
+    if (!email || !password) {
+      this.showToast(this.t('fill_all_fields'), 'error');
+      return;
+    }
+
     const users = JSON.parse(localStorage.getItem('nove_users')) || [];
     const hashed = await this.hashPassword(password);
     const user = users.find(u => u.email === email && u.password === hashed);
-    if (!user) { this.showToast(this.t('wrong_credentials'), 'error'); return; }
+
+    if (!user) {
+      this.showToast(this.t('wrong_credentials'), 'error');
+      return;
+    }
+
     this.currentUser = { ...user };
     delete this.currentUser.password;
     localStorage.setItem('nove_user', JSON.stringify(this.currentUser));
@@ -192,11 +780,63 @@ const APP = {
     this.showToast(this.t('welcome') + ', ' + user.name + '!', 'success');
   },
 
-  showAuthTab(tab) {
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
-    document.getElementById('auth-login-form').style.display = tab === 'login' ? 'block' : 'none';
-    document.getElementById('auth-register-form').style.display = tab === 'register' ? 'block' : 'none';
+  loginWithGoogle() {
+    const configured = this.GOOGLE_CLIENT_ID && this.GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID';
+    if (!configured) {
+      this.showToast(this.t('google_hint'), 'error');
+      this.demoLogin();
+      return;
+    }
+    if (!window.google || !window.google.accounts) {
+      this.showToast('Loading Google Sign-In...', 'success');
+      this.loadGoogleSDK();
+      return;
+    }
+    window.google.accounts.id.initialize({
+      client_id: this.GOOGLE_CLIENT_ID,
+      callback: (response) => {
+        try {
+          const payload = JSON.parse(atob(response.credential.split('.')[1]));
+          this.finishGoogleLogin({
+            sub: payload.sub,
+            name: payload.name || payload.email.split('@')[0],
+            email: payload.email,
+            picture: payload.picture || ''
+          });
+        } catch (e) {
+          this.showToast('Failed to read Google account', 'error');
+        }
+      }
+    });
+    window.google.accounts.id.prompt();
+  },
+
+  loadGoogleSDK() {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.onload = () => this.loginWithGoogle();
+    script.onerror = () => { this.showToast('Unable to load Google Sign-In', 'error'); this.demoLogin(); };
+    document.body.appendChild(script);
+  },
+
+  demoLogin() {
+    this.showToast('Google not configured - using demo login', 'error');
+    if (confirm('Demo Mode: Login as a regular test user? (Click OK to continue as a normal customer)')) {
+      this.currentUser = {
+        id: 'user_' + Date.now(),
+        name: 'Test User',
+        email: 'user_' + Date.now() + '@demo.nove',
+        avatar: '',
+        isAdmin: false,
+        joinedAt: new Date().toISOString()
+      };
+    } else {
+      return;
+    }
+    this.registerUser(this.currentUser);
+    localStorage.setItem('nove_user', JSON.stringify(this.currentUser));
+    this.updateAuthUI();
+    this.closeModal('auth-modal');
   },
 
   logout() {
@@ -207,94 +847,256 @@ const APP = {
     window.location.href = isAdminPage ? '../index.html' : 'index.html';
   },
 
+  isAdmin() {
+    return this.currentUser && this.currentUser.email === this.ADMIN_EMAIL;
+  },
+
   updateAuthUI() {
     const authBtns = document.getElementById('auth-buttons');
     const userMenu = document.getElementById('user-menu');
     if (!authBtns || !userMenu) return;
+
     if (this.currentUser) {
       authBtns.style.display = 'none';
-      userMenu.style.display = 'block';
-      document.querySelector('.user-name').textContent = this.currentUser.name;
-      document.querySelector('.user-email').textContent = this.currentUser.email;
-      const av = document.querySelector('.user-avatar');
-      av.src = this.currentUser.avatar || this.generateAvatar(this.currentUser.name[0] || 'U');
+      userMenu.classList.add('active');
+      const img = userMenu.querySelector('.user-avatar');
+      if (img) {
+        img.src = this.currentUser.avatar || this.generateAvatar(this.currentUser.name);
+      }
+      const dd = userMenu.querySelector('.user-dropdown');
+      if (dd) {
+        dd.querySelector('.user-name').textContent = this.currentUser.name;
+        dd.querySelector('.user-email').textContent = this.currentUser.email;
+        const adminLink = dd.querySelector('.admin-link');
+        if (adminLink) {
+          adminLink.style.display = this.isAdmin() ? 'flex' : 'none';
+        }
+      }
     } else {
-      authBtns.style.display = 'block';
-      userMenu.style.display = 'none';
+      authBtns.style.display = 'flex';
+      userMenu.classList.remove('active');
     }
   },
 
-  generateAvatar(letter) {
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='40' height='40' fill='#5865f2'/><text x='20' y='26' font-size='18' fill='#fff' text-anchor='middle' font-family='sans-serif' font-weight='bold'>${letter}</text></svg>`;
-    return 'data:image/svg+xml;base64,' + btoa(svg);
+  generateAvatar(name) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 40;
+    canvas.height = 40;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#333';
+    ctx.fillRect(0, 0, 40, 40);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 18px Inter';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(name.charAt(0).toUpperCase(), 20, 20);
+    return canvas.toDataURL();
   },
 
   toggleUserDropdown() {
-    document.querySelector('.user-dropdown').classList.toggle('active');
+    const dd = document.querySelector('.user-dropdown');
+    dd.classList.toggle('active');
   },
 
   // ===== CART =====
   addToCart(productId) {
-    const p = this.products.find(x => x.id === productId);
-    if (!p) return;
-    const item = this.cart.find(i => i.id === productId);
-    if (item) item.qty = (item.qty || 1) + 1;
-    else this.cart.push({ id: p.id, name: p.name, price: p.price, image: p.image, qty: 1 });
+    const product = this.products.find(p => p.id === productId);
+    if (!product) return;
+    if (this.cart.find(c => c.id === productId)) {
+      this.showToast(this.t('already_cart'), 'error');
+      return;
+    }
+    this.cart.push(product);
     this.saveCart();
-    this.updateCartBadge();
-    this.showToast(p.name + ' added to cart', 'success');
-  },
-
-  removeFromCart(productId) {
-    this.cart = this.cart.filter(i => i.id !== productId);
-    this.saveCart();
-    this.updateCartBadge();
-    this.renderCart();
-  },
-
-  getCartTotal() {
-    return this.cart.reduce((s, i) => s + (i.price * (i.qty || 1)), 0).toFixed(2);
-  },
-
-  updateCartBadge() {
-    const b = document.querySelector('.cart-badge');
-    const count = this.cart.reduce((s, i) => s + (i.qty || 1), 0);
-    if (b) { b.textContent = count; b.classList.toggle('hidden', count === 0); }
+    this.showToast(product.name + ' ' + this.t('added_cart'), 'success');
     this.updateAddToCartButtons();
   },
 
+  removeFromCart(productId) {
+    this.cart = this.cart.filter(c => c.id !== productId);
+    this.saveCart();
+    this.renderCart();
+    this.updateAddToCartButtons();
+  },
+
+  getCartTotal() {
+    return this.cart.reduce((sum, item) => sum + item.price, 0);
+  },
+
+  updateCartBadge() {
+    const badge = document.querySelector('.cart-badge');
+    if (!badge) return;
+    badge.textContent = this.cart.length;
+    badge.classList.toggle('hidden', this.cart.length === 0);
+  },
+
   updateAddToCartButtons() {
-    document.querySelectorAll('[data-add]').forEach(btn => {
-      const id = btn.getAttribute('data-add');
-      const item = this.cart.find(i => i.id === id);
-      btn.textContent = item ? `${this.t('add_to_cart')} (${item.qty})` : this.t('add_to_cart');
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+      const id = parseInt(btn.dataset.id);
+      if (this.cart.find(c => c.id === id)) {
+        btn.textContent = this.t('in_cart');
+        btn.classList.add('added');
+      } else {
+        btn.textContent = this.t('add_to_cart');
+        btn.classList.remove('added');
+      }
     });
   },
 
-  // ===== PRODUCTS RENDERING =====
+  // ===== RENDER =====
+  renderCurrentPage() {
+    this.updateAuthUI();
+    this.updateCartBadge();
+    const page = this.getPage();
+    const successContent = document.getElementById('success-content');
+    if (page === 'success' && successContent) {
+      successContent.style.display = 'flex';
+      this.renderSuccessPage();
+    } else if (successContent) {
+      successContent.style.display = 'none';
+    }
+    if (page === 'admin') this.renderAdminPage();
+  },
+
+  getPage() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('page') || 'home';
+  },
+
   renderProducts(filter = 'all') {
     const grid = document.getElementById('products-grid');
     if (!grid) return;
-    const items = filter === 'all' ? this.products : this.products.filter(p => p.category === filter);
-    grid.innerHTML = items.map(p => `
-      <div class="product-card">
-        ${p.image ? `<img class="product-image" src="${p.image}" alt="${p.name}">` : `<div class="product-image placeholder">${p.name[0]}</div>`}
-        <h3>${p.name}</h3>
-        <p>${p.desc}</p>
-        <div class="product-price">$${p.price.toFixed ? p.price.toFixed(2) : Number(p.price).toFixed(2)}</div>
-        <button class="btn-primary" onclick="APP.addToCart('${p.id}')">${this.t('add_to_cart')}</button>
-      </div>`).join('');
+    this.syncStoreFilters();
+    let filtered = this.products.filter(p => p.status === 'active');
+    if (filter !== 'all') filtered = filtered.filter(p => p.category === filter);
+    grid.innerHTML = filtered.map(p => `
+      <div class="product-card" onclick="APP.showProduct(${p.id})">
+        <div class="product-image">
+          <span class="product-tag">${this.resolveCategoryLabel(p.category)}</span>
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover;">` : p.icon}
+        </div>
+        <div class="product-info">
+          <h3>${p.name}</h3>
+          <p>${p.description}</p>
+          <div class="product-footer">
+            <div class="product-price">$${p.price} <span>${this.t('usd')}</span></div>
+            <button class="btn-add-cart" data-id="${p.id}" onclick="event.stopPropagation(); APP.addToCart(${p.id})">
+              ${this.cart.find(c => c.id === p.id) ? this.t('in_cart') : this.t('add_to_cart')}
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    this.updateAddToCartButtons();
   },
 
   filterProducts(category) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    event.target.classList.add('active');
     this.renderProducts(category);
   },
 
-  // ===== MODALS =====
+  syncStoreFilters() {
+    const wrap = document.querySelector('.category-filters');
+    if (!wrap) return;
+    const staticKeys = ['all', 'fivem', 'discord'];
+    wrap.querySelectorAll('.filter-btn').forEach(b => {
+      const f = b.getAttribute('data-filter');
+      if (f && !staticKeys.includes(f)) b.remove();
+    });
+    this.getCategories().forEach(c => {
+      const existing = wrap.querySelector(`.filter-btn[data-filter="${c.key}"]`);
+      if (!existing) {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.setAttribute('data-filter', c.key);
+        btn.textContent = c.name;
+        btn.onclick = () => APP.filterProductsByKey(c.key, btn);
+        wrap.appendChild(btn);
+      }
+    });
+  },
+
+  filterProductsByKey(key, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    this.renderProducts(key);
+  },
+
+  showProduct(id) {
+    const product = this.products.find(p => p.id === id);
+    if (!product) return;
+    const overlay = document.getElementById('product-modal');
+    const body = overlay.querySelector('.modal-body');
+    body.innerHTML = `
+      <div class="product-detail">
+        <div class="product-detail-image">${product.image ? `<img src="${product.image}" alt="${product.name}" style="width:100%; height:100%; object-fit:cover;">` : product.icon}</div>
+        <div class="product-detail-body">
+          <button class="modal-close" onclick="APP.closeModal('product-modal')">&times;</button>
+          <div class="category">${this.resolveCategoryLabel(product.category)}</div>
+          <h2>${product.name}</h2>
+          <p class="description">${product.description}</p>
+          <div class="product-detail-price">$${product.price}</div>
+          <ul class="product-detail-features">
+            ${(product.features || []).map(f => `<li>${f}</li>`).join('')}
+          </ul>
+          <button class="btn-primary" style="width:100%" onclick="APP.addToCart(${product.id}); APP.closeModal('product-modal');">
+            ${this.cart.find(c => c.id === product.id) ? this.t('in_cart') : this.t('add_to_cart')}
+          </button>
+        </div>
+      </div>
+    `;
+    overlay.classList.add('active');
+  },
+
   closeModal(id) {
     document.getElementById(id).classList.remove('active');
+  },
+
+  renderCart() {
+    const container = document.getElementById('cart-modal');
+    if (!container) return;
+    const body = container.querySelector('.modal-body');
+    let html = `<h2>${this.t('your_cart')}</h2><p>${this.t('cart_selected')}</p>`;
+
+    if (this.cart.length === 0) {
+      html += `
+        <div class="cart-empty">
+          <div class="cart-empty-icon">\ud83d\uded2</div>
+          <p>${this.t('cart_empty')}</p>
+        </div>
+      `;
+    } else {
+      html += '<div class="cart-items">';
+      this.cart.forEach(item => {
+        html += `
+          <div class="cart-item">
+            <div class="cart-item-icon">${item.icon}</div>
+            <div class="cart-item-details">
+              <h4>${item.name}</h4>
+              <p>${this.resolveCategoryLabel(item.category)}</p>
+            </div>
+            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+            <button class="cart-item-remove" onclick="APP.removeFromCart(${item.id})">\u2715</button>
+          </div>
+        `;
+      });
+      html += '</div>';
+      html += `
+        <div class="cart-summary">
+          <div class="cart-total">
+            <span>${this.t('total')}</span>
+            <strong>$${this.getCartTotal().toFixed(2)}</strong>
+          </div>
+          <div id="paypal-button-container"></div>
+          <button class="btn-primary" style="width:100%; margin-top:0.8rem;" onclick="APP.checkoutPayPal()">
+            ${this.t('pay_paypal')} - $${this.getCartTotal().toFixed(2)}
+          </button>
+        </div>
+      `;
+    }
+    body.innerHTML = html;
+    this.initPayPal();
   },
 
   openCart() {
@@ -302,135 +1104,1070 @@ const APP = {
     document.getElementById('cart-modal').classList.add('active');
   },
 
-  renderCart() {
-    const body = document.querySelector('#cart-modal .modal-body');
-    if (!body) return;
-    if (this.cart.length === 0) {
-      body.innerHTML = `<p style="text-align:center; padding:2rem;">${this.t('cart_empty')}</p>`;
-      return;
+  // ===== PAYPAL =====
+  initPayPal() {
+    const container = document.getElementById('paypal-button-container');
+    if (!container) return;
+    if (window.paypal) {
+      this.renderPayPalButtons();
+    } else if (this.PAYPAL_CLIENT_ID && this.PAYPAL_CLIENT_ID !== 'YOUR_PAYPAL_CLIENT_ID') {
+      this.loadPayPalSDK();
     }
-    body.innerHTML = `
-      <h2>${this.t('checkout')}</h2>
-      ${this.cart.map(i => `
-        <div class="cart-item">
-          <span>${i.name} x${i.qty}</span>
-          <span>$${(i.price * i.qty).toFixed(2)}</span>
-          <button onclick="APP.removeFromCart('${i.id}')">&#10005;</button>
-        </div>`).join('')}
-      <div class="cart-total"><strong>Total: $${this.getCartTotal()}</strong></div>
-      <button class="btn-primary" onclick="APP.simulateCheckout()" style="width:100%; margin-top:1rem;">${this.t('checkout')}</button>
-    `;
   },
 
-  simulateCheckout() {
-    if (!this.currentUser) {
-      this.showToast('Please sign in first', 'error');
+  loadPayPalSDK() {
+    const script = document.createElement('script');
+    script.src = 'https://www.paypal.com/sdk/js?client-id=' + this.PAYPAL_CLIENT_ID;
+    script.onload = () => this.renderPayPalButtons();
+    script.onerror = () => this.showToast('Unable to load PayPal', 'error');
+    document.body.appendChild(script);
+  },
+
+  renderPayPalButtons() {
+    const container = document.getElementById('paypal-button-container');
+    if (!container || !window.paypal) return;
+    container.innerHTML = '';
+    paypal.Buttons({
+      style: { layout: 'vertical', color: 'black', shape: 'rect', label: 'paypal' },
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: this.getCartTotal().toFixed(2) },
+            description: 'Nove Store Purchase'
+          }]
+        });
+      },
+      onApprove: async (data, actions) => {
+        const order = await actions.order.capture();
+        this.completeOrder(order);
+      },
+      onError: (err) => {
+        this.showToast('Payment failed. Please try again.', 'error');
+        console.error(err);
+      }
+    }).render('#paypal-button-container');
+  },
+
+  checkoutPayPal() {
+    if (this.cart.length === 0) {
+      this.showToast(this.t('cart_empty_err'), 'error');
       return;
     }
+    if (!this.currentUser) {
+      this.showToast(this.t('please_signin'), 'error');
+      this.closeModal('cart-modal');
+      document.getElementById('auth-modal').classList.add('active');
+      return;
+    }
+    // If PayPal SDK loaded, buttons will handle it. Otherwise redirect.
+    if (window.paypal) {
+      this.showToast(this.t('paypal_click'), 'success');
+    } else {
+      this.simulatePayment();
+    }
+  },
+
+  simulatePayment() {
+    // For demo/testing when PayPal isn't configured
     const order = {
-      id: 'ord_' + Date.now(),
-      userId: this.currentUser.id,
-      email: this.currentUser.email,
-      items: this.cart.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price })),
+      id: 'ORD-' + Date.now(),
+      items: [...this.cart],
       total: this.getCartTotal(),
-      status: 'paid',
-      date: new Date().toISOString()
+      email: this.currentUser ? this.currentUser.email : 'guest@example.com',
+      status: 'completed',
+      date: new Date().toISOString(),
+      paymentId: 'SIM-' + Math.random().toString(36).substr(2, 9)
+    };
+    this.completeOrder({ id: order.paymentId });
+  },
+
+  completeOrder(paypalOrder) {
+    const order = {
+      id: 'ORD-' + Date.now(),
+      items: [...this.cart],
+      total: this.getCartTotal(),
+      email: this.currentUser ? this.currentUser.email : 'guest@example.com',
+      userName: this.currentUser ? this.currentUser.name : 'Guest',
+      status: 'completed',
+      date: new Date().toISOString(),
+      paymentId: paypalOrder.id
     };
     this.orders.push(order);
     this.saveOrders();
     this.cart = [];
     this.saveCart();
-    this.updateCartBadge();
     this.closeModal('cart-modal');
-    this.showToast('Order placed successfully!', 'success');
+    window.location.href = '?page=success&order=' + order.id;
   },
 
-  showToast(message, type = 'success') {
-    let t = document.getElementById('toast');
-    if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
-    t.textContent = message;
-    t.className = 'toast ' + type;
-    t.style.display = 'block';
-    clearTimeout(t._t);
-    t._t = setTimeout(() => { t.style.display = 'none'; }, 2500);
+  renderSuccessPage() {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('order');
+    const container = document.getElementById('success-content');
+    if (!container) return;
+    container.innerHTML = `
+      <div class="success-icon">\u2713</div>
+      <h1>${this.t('order_confirmed')}</h1>
+      <p>${this.t('order_success_desc')} <strong>${orderId}</strong></p>
+      <p style="color: var(--gray-500); margin-bottom: 2rem;">
+        ${this.t('order_success_extra1')}<br>${this.t('order_success_extra2')}
+      </p>
+      <a href="index.html" class="btn-primary">${this.t('back_to_store')}</a>
+    `;
   },
 
-  // ===== ADMIN (rendered into #admin-content in admin.html) =====
+  // ===== ADMIN =====
+  renderAdminPage() {
+    if (!this.isAdmin()) {
+      document.getElementById('admin-content') ?
+        document.getElementById('admin-content').innerHTML = `
+          <div class="access-denied">
+            <div>
+              <h1>\ud83d\udeab</h1>
+              <h1>${this.t('access_denied')}</h1>
+              <p>${this.t('access_denied_desc')}</p>
+              <a href="index.html" class="btn-primary">${this.t('back_to_store')}</a>
+            </div>
+          </div>
+        ` : null;
+      return;
+    }
+    this.renderAdminDashboard();
+  },
+
+  renderAdminDashboard() {
+    const content = document.getElementById('admin-content');
+    if (!content) return;
+    const totalSales = this.orders.reduce((sum, o) => sum + o.total, 0);
+    const lastOrders = this.orders.slice(-5).reverse();
+
+    const totalsByDay = {};
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    this.orders.forEach(o => {
+      const d = new Date(o.date).getDay();
+      totalsByDay[d] = (totalsByDay[d] || 0) + o.total;
+    });
+    const chartBars = days.map((d, i) => {
+      const val = totalsByDay[i] || 0;
+      const max = Math.max(...Object.values(totalsByDay), 1);
+      const h = Math.max(8, (val / max) * 100);
+      return `<div class="bar-col" title="$${val.toFixed(2)}">
+        <div class="bar" style="height:${h}%"></div>
+        <div class="bar-label">${d}</div>
+      </div>`;
+    }).join('');
+
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u2705</span>
+            ${this.t('admin_welcome')}, ${APP.currentUser.name.split(' ')[0]}!
+            <div class="tb-sub">${this.t('store_slogan')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn-admin btn-admin-ghost" onclick="APP.showAdminSection('orders')">\u{1F4B3} ${this.t('orders_manage')}</button>
+          <button class="btn-admin btn-admin-primary" onclick="APP.showAdminSection('products')">+ ${this.t('add_product')}</button>
+        </div>
+      </div>
+
+      <div class="admin-stats">
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">\u{1F4B0}</div>
+            <h4>${this.t('total_revenue')}</h4>
+          </div>
+          <div class="value">$${totalSales.toFixed(2)}</div>
+          <div class="change">\u2191 100% ${this.t('total_orders')}</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">\u{1F4E6}</div>
+            <h4>${this.t('total_orders')}</h4>
+          </div>
+          <div class="value">${this.orders.length}</div>
+          <div class="change">\u2191 ${this.orders.length ? this.t('active_sales') : this.t('no_sales_yet')}</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">\u{1F4E5}</div>
+            <h4>${this.t('products_count')}</h4>
+          </div>
+          <div class="value">${this.products.length}</div>
+          <div class="change">${this.products.filter(p => p.status === 'active').length} ${this.t('active_products')}</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header">
+            <div class="stat-icon">\u{1F465}</div>
+            <h4>${this.t('users_manage')}</h4>
+          </div>
+          <div class="value">${(JSON.parse(localStorage.getItem('nove_users')) || []).length}</div>
+          <div class="change">\u2191 ${this.t('new_signups')}</div>
+        </div>
+      </div>
+
+      <div class="admin-grid-2">
+        <div class="admin-panel-card">
+          <div class="pc-header">
+            <h3>${this.t('revenue_week')}</h3>
+            <span class="pc-link" onclick="APP.showAdminSection('orders')">${this.t('view_all')} \u2190</span>
+          </div>
+          <div class="pc-body">
+            <div class="bar-chart">${chartBars}</div>
+          </div>
+        </div>
+        <div class="admin-panel-card">
+          <div class="pc-header">
+            <h3>${this.t('latest_orders')}</h3>
+            <span class="pc-link" onclick="APP.showAdminSection('orders')">${this.t('view_all')} \u2190</span>
+          </div>
+          <div class="pc-body">
+            <div class="activity-list">
+              ${this.orders.length === 0 ?
+                `<p style="color:var(--gray-500); font-size:0.85rem; text-align:center; padding:1.5rem;">${this.t('no_orders')}</p>` :
+                lastOrders.map(o => `
+                  <div class="activity-item">
+                    <div class="a-icon">\u{1F4E6}</div>
+                    <div class="a-text">
+                      <div class="a-title">${o.userName || this.t('guest')} - ${o.items.map(i => i.name).slice(0,2).join(', ')}</div>
+                      <div class="a-sub">${o.id} \u00b7 ${new Date(o.date).toLocaleString()}</div>
+                    </div>
+                    <div class="a-amount green">$${o.total.toFixed(2)}</div>
+                  </div>
+                `).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-panel-card">
+        <div class="pc-header">
+          <h3>${this.t('recent_orders')}</h3>
+          <span class="pc-link" onclick="APP.showAdminSection('orders')">${this.t('view_all')} \u2190</span>
+        </div>
+        <div class="pc-body" style="padding:0;">
+          <div class="admin-table" style="border:none; border-radius:0;">
+            <table>
+              <thead>
+                <tr><th>${this.t('order')}</th><th>${this.t('customer')}</th><th>${this.t('products')}</th><th>${this.t('total')}</th><th>${this.t('status')}</th><th>${this.t('date')}</th></tr>
+              </thead>
+              <tbody>
+                ${this.orders.length === 0 ? `<tr><td colspan="6" style="text-align:center; color: var(--gray-500); padding: 2rem;">${this.t('no_orders')}</td></tr>` :
+                  this.orders.slice().reverse().slice(0, 6).map(o => `
+                    <tr>
+                      <td style="font-weight:600;">${o.id}</td>
+                      <td>${o.userName || this.t('guest')}</td>
+                      <td>${o.items.map(i => i.name).slice(0,2).join(', ')}${o.items.length > 2 ? ' +' + (o.items.length-2) : ''}</td>
+                      <td style="font-weight:700;">$${o.total.toFixed(2)}</td>
+                      <td><span class="status-badge ${o.status === 'completed' ? 'active' : 'pending'}">${o.status === 'completed' ? this.t('completed') : this.t('pending')}</span></td>
+                      <td>${new Date(o.date).toLocaleDateString()}</td>
+                    </tr>
+                  `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  renderAdminCategories(content) {
+    this.loadCategories();
+    const cats = this.categories;
+    const catOptions = [
+      { key: 'fivem', label: this.t('fivem'), icon: '\u{1F3AE}' },
+      { key: 'discord', label: this.t('discord'), icon: '\u{1F5A5}\uFE0F' },
+      ...cats.map(c => ({ key: c.key, label: c.name, icon: c.icon || '\u{1F4C1}' }))
+    ];
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u{1F4C1}</span>
+            ${this.t('categories_manage')}
+            <div class="tb-sub">${this.t('categories_sub')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn-admin btn-admin-primary" onclick="APP.showAddCategoryForm()">+ ${this.t('add_category')}</button>
+        </div>
+      </div>
+      <div class="admin-grid admin-grid-cats">
+        ${catOptions.map(c => {
+          const count = this.products.filter(p => p.category === c.key).length;
+          return `
+            <div class="cat-card">
+              <div class="cat-card-icon">${c.icon}</div>
+              <div class="cat-card-name">${c.label}</div>
+              <div class="cat-card-count">${count} ${this.t('num_products')}</div>
+              <div class="cat-card-actions">
+                <button class="row-btn edit" onclick="APP.editCategory('${c.key}')" title="Edit">\u270F\uFE0F</button>
+                <button class="row-btn delete" onclick="APP.deleteCategory('${c.key}')" title="Delete">\u{1F5D1}\uFE0F</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+        ${cats.length === 0 ? `<div style="grid-column:1/-1; text-align:center; color:var(--gray-500); padding:2rem 0;">${this.t('no_categories')}</div>` : ''}
+      </div>
+      <div class="admin-card" style="margin-top:1.5rem;">
+        <h3 class="admin-card-title">${this.t('add_category')}</h3>
+        <form onsubmit="APP.saveCategory(event)" class="admin-form-card" style="margin:1rem 0 0; box-shadow:none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label>${this.t('category_name')}</label>
+              <input type="text" id="new-cat-name" placeholder="e.g. RedM" required>
+            </div>
+            <div class="form-group">
+              <label>${this.t('category_icon')}</label>
+              <input type="text" id="new-cat-icon" placeholder="\u{1F3AF}">
+            </div>
+            <div class="form-group" style="align-self:flex-end;">
+              <button type="submit" class="btn-admin btn-admin-primary">+ ${this.t('add_category')}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    `;
+  },
+
+  showAddCategoryForm() {
+    this.showAdminSection('categories');
+    setTimeout(() => {
+      const el = document.getElementById('new-cat-name');
+      if (el) el.focus();
+    }, 50);
+  },
+
+  saveCategory(e) {
+    e.preventDefault();
+    this.loadCategories();
+    const name = document.getElementById('new-cat-name').value.trim();
+    if (!name) return;
+    const icon = document.getElementById('new-cat-icon').value.trim() || '\u{1F4C1}';
+    const key = 'cat_' + Date.now();
+    this.categories.push({ key, name, icon });
+    this.saveCategories();
+    this.showToast(this.t('add_cat_toast'), 'success');
+    this.showAdminSection('categories');
+  },
+
+  editCategory(key) {
+    this.loadCategories();
+    let cat = this.categories.find(c => c.key === key);
+    if (!cat && (key === 'fivem' || key === 'discord')) {
+      cat = { key, name: key === 'fivem' ? this.t('fivem') : this.t('discord'), icon: key === 'fivem' ? '\u{1F3AE}' : '\u{1F5A5}\uFE0F' };
+      this.categories.push(cat);
+    }
+    if (!cat) return;
+    const newName = prompt(this.t('category_name'), cat.name);
+    if (newName === null || !newName.trim()) return;
+    const newIcon = prompt(this.t('category_icon'), cat.icon) || '\u{1F4C1}';
+    cat.name = newName.trim();
+    cat.icon = newIcon;
+    this.saveCategories();
+    this.showToast(this.t('updated_cat_toast'), 'success');
+    this.showAdminSection('categories');
+  },
+
+  deleteCategory(key) {
+    this.loadCategories();
+    if (!confirm(this.t('delete_cat_confirm'))) return;
+    this.categories = this.categories.filter(c => c.key !== key);
+    this.products.forEach(p => { if (p.category === key) p.category = 'general'; });
+    if (key === 'fivem') {
+      const f = { key: 'fivem', name: 'FiveM', icon: '\u{1F3AE}' };
+      this.categories.push(f);
+    }
+    if (key === 'discord') {
+      const d = { key: 'discord', name: 'Discord', icon: '\u{1F5A5}\uFE0F' };
+      this.categories.push(d);
+    }
+    this.saveCategories();
+    this.saveProducts();
+    this.showToast(this.t('deleted_cat_toast'), 'success');
+    this.showAdminSection('categories');
+  },
+
   showAdminSection(section) {
     const content = document.getElementById('admin-content');
     if (!content) return;
-    if (section === 'dashboard') return this.renderAdminDashboard(content);
-    if (section === 'products') return this.renderAdminProducts(content);
-    if (section === 'orders') return this.renderAdminOrders(content);
-    if (section === 'users') return this.renderAdminUsers(content);
-    if (section === 'admins') { content.innerHTML = `<h2>Add Admin</h2><p>Manage additional admins here.</p>`; return; }
-    if (section === 'settings') return this.renderAdminSettings(content);
+    if (!APP.isAdmin()) {
+      const isAdminPage = window.location.pathname.includes('admin.html');
+      content.innerHTML = `
+        <div class="access-denied"><div>
+          <h1>\ud83d\udeab</h1>
+          <h1>${this.t('access_denied')}</h1>
+          <p>${this.t('access_denied_desc')}</p>
+          <a href="${isAdminPage ? '../index.html' : 'index.html'}" class="btn-primary">${this.t('back_to_store')}</a>
+        </div></div>`;
+      return;
+    }
+    if (section === 'products') this.renderAdminProducts(content);
+    else if (section === 'categories') this.renderAdminCategories(content);
+    else if (section === 'orders') this.renderAdminOrders(content);
+    else if (section === 'users') this.renderAdminUsers(content);
+    else if (section === 'admins') this.renderAdminStaff(content);
+    else if (section === 'settings') this.renderAdminSettings(content);
+    else this.renderAdminDashboard();
+
+    document.querySelectorAll('.admin-nav-item').forEach(n => n.classList.remove('active'));
+    const activeNav = document.querySelector(`.admin-nav-item[data-section="${section}"]`);
+    if (activeNav) activeNav.classList.add('active');
   },
 
-  renderAdminDashboard(c) {
-    const revenue = this.orders.reduce((s, o) => s + parseFloat(o.total), 0).toFixed(2);
-    const users = JSON.parse(localStorage.getItem('nove_users')) || [];
-    c.innerHTML = `
-      <h2>${this.t('dashboard')}</h2>
-      <div class="admin-stats">
-        <div class="stat-card"><h3>$${revenue}</h3><p>Revenue</p></div>
-        <div class="stat-card"><h3>${this.orders.length}</h3><p>Orders</p></div>
-        <div class="stat-card"><h3>${users.length}</h3><p>Users</p></div>
-        <div class="stat-card"><h3>${this.products.length}</h3><p>Products</p></div>
+  renderAdminProducts(content) {
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u{1F4E5}</span>
+            ${this.t('products_manage')}
+            <div class="tb-sub">${this.t('manage_products_sub')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn-admin btn-admin-primary" onclick="APP.showAddProductForm()">+ ${this.t('add_new_product')}</button>
+        </div>
       </div>
-      <h3 style="margin-top:1.5rem;">Recent Orders</h3>
-      ${this.orders.slice().reverse().slice(0,5).map(o => `
-        <div class="order-row">${o.email} - <strong>$${o.total}</strong> - ${new Date(o.date).toLocaleString()}</div>`).join('') || `<p>No orders yet</p>`}
+      <div class="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>${this.t('product_name')}</th>
+              <th>${this.t('category_label')}</th>
+              <th>${this.t('price')}</th>
+              <th>${this.t('sales')}</th>
+              <th>${this.t('status')}</th>
+              <th>${this.t('actions')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${this.products.map(p => `
+              <tr>
+                <td>
+                  <div class="cell-product">
+                    <div class="cp-icon">${p.image ? `<img src="${p.image}" alt="" style="width:34px;height:34px;border-radius:8px;object-fit:cover;">` : (p.icon || '\u{1F4E6}')}</div>
+                    <div>
+                      <div class="cp-name">${p.name} ${p.link ? '<span class="link-dot" title="' + this.t('account_link') + '">\u{1F517}</span>' : ''}</div>
+                      <div class="cp-cat">#${p.id}</div>
+                    </div>
+                  </div>
+                </td>
+                <td><span class="status-badge ${p.category === 'fivem' ? 'active' : 'pending'}" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${this.resolveCategoryLabel(p.category)}</span></td>
+                <td style="font-weight:700;">$${p.price.toFixed(2)}</td>
+                <td>${p.sales || 0}</td>
+                <td><span class="status-badge ${p.status === 'active' ? 'active' : 'inactive'}">${p.status === 'active' ? this.t('active') : this.t('inactive')}</span></td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-btn edit" title="Edit" onclick="APP.editProduct(${p.id})">\u270F\uFE0F</button>
+                    <button class="row-btn delete" title="Delete" onclick="APP.deleteProduct(${p.id})">\u{1F5D1}\uFE0F</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
     `;
   },
 
-  renderAdminProducts(c) {
-    c.innerHTML = `
-      <h2>${this.t('products_manage')}</h2>
-      <button class="btn-primary" onclick="APP.showAdminSection('products')">+ Add Product</button>
-      ${this.products.map(p => `
-        <div class="product-row">
-          <span>${p.name}</span><span>$${Number(p.price).toFixed(2)}</span>
-          <button onclick="APP.deleteProduct('${p.id}')">Delete</button>
-        </div>`).join('')}
+  showAddProductForm(productId = null) {
+    const product = productId ? this.products.find(p => p.id === productId) : null;
+    const title = product ? this.t('edit_product') : this.t('add_new_product');
+    const content = document.getElementById('admin-content');
+    if (!content) return;
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">${product ? '\u270F\uFE0F' : '\u2795'}</span>
+            ${title}
+            <div class="tb-sub">${product ? this.t('update_product_details') : this.t('create_new_listing')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn-admin btn-admin-ghost" onclick="APP.showAdminSection('products')">\u2190 ${this.t('back_to_products')}</button>
+        </div>
+      </div>
+      <div class="admin-form-card">
+        <div class="form-card-header">
+          <div class="fc-icon">${product ? '\u{1F4E5}' : '\u2728'}</div>
+          <h3>${product ? this.t('product_info') : this.t('new_product_details')}</h3>
+        </div>
+        <form onsubmit="APP.saveProduct(event, ${productId || 'null'})">
+          <div class="form-group">
+            <label>${this.t('product_name')}</label>
+            <input type="text" id="product-name" value="${product ? product.name : ''}" placeholder="e.g. QBCore Framework" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>${this.t('category_label')}</label>
+              <select id="product-category">
+                <option value="fivem" ${product && product.category === 'fivem' ? 'selected' : ''}>${this.t('fivem')}</option>
+                <option value="discord" ${product && product.category === 'discord' ? 'selected' : ''}>${this.t('discord')}</option>
+                ${this.getCategories().map(c => `
+                  <option value="${c.key}" ${product && product.category === c.key ? 'selected' : ''}>${c.name}</option>
+                `).join('')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>${this.t('price_usd')}</label>
+              <input type="number" id="product-price" step="0.01" value="${product ? product.price : ''}" placeholder="29.99" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>${this.t('product_desc')}</label>
+            <textarea id="product-description" placeholder="${this.t('product_desc')}..." required>${product ? product.description : ''}</textarea>
+          </div>
+          <div class="form-group">
+            <label>${this.t('product_icon')}</label>
+            <input type="text" id="product-icon" value="${product ? product.icon : ''}" placeholder="\ud83d\udce6">
+          </div>
+          <div class="form-group">
+            <label>${this.t('product_image')}</label>
+            <div style="display:flex; gap:0.8rem; align-items:center; flex-wrap:wrap;">
+              <input type="file" id="product-image-input" accept="image/*" onchange="APP.previewProductImage(event)">
+              <input type="hidden" id="product-image" value="${product && product.image ? product.image : ''}">
+            </div>
+            <div id="product-image-preview" style="margin-top:0.6rem; ${product && product.image ? '' : 'display:none;'}">
+              <img id="product-image-preview-img" src="${product && product.image ? product.image : ''}" alt="" style="max-width:120px; max-height:120px; border-radius:10px; border:1px solid var(--border);">
+              <button type="button" class="row-btn delete" style="margin-top:0.4rem;" onclick="APP.clearProductImage()">${this.t('remove_image')}</button>
+            </div>
+            <div class="form-hint">${this.t('product_image_hint')}</div>
+          </div>
+          <div class="form-group">
+            <label>${this.t('one_per_line')}</label>
+            <textarea id="product-features" rows="4" placeholder="${this.t('inst_delivery')}\n${this.t('support247')}\n${this.t('updates')}">${product && product.features ? product.features.join('\n') : ''}</textarea>
+          </div>
+          <div class="form-row" style="margin-bottom:1.5rem;">
+            <div class="form-group">
+              <label>${this.t('status')}</label>
+              <select id="product-status">
+                <option value="active" ${product && product.status === 'active' ? 'selected' : ''}>${this.t('active')}</option>
+                <option value="inactive" ${product && product.status === 'inactive' ? 'selected' : ''}>${this.t('inactive')}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>${this.t('account_link')}</label>
+              <input type="text" id="product-link" value="${product && product.link ? product.link : ''}" placeholder="${this.t('account_link_ph')}">
+              <div class="form-hint">${this.t('account_link_hint')}</div>
+            </div>
+          </div>
+          <button type="submit" class="btn-admin btn-admin-primary" style="margin-top:1rem;">
+            ${product ? '\u{1F4C1} ' + this.t('update_product') : '\u2795 ' + this.t('add_new_product')}
+          </button>
+        </form>
+      </div>
     `;
   },
 
-  deleteProduct(id) {
-    this.products = this.products.filter(p => p.id !== id);
+  previewProductImage(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      this.showToast(this.t('image_too_large'), 'error');
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      document.getElementById('product-image').value = dataUrl;
+      document.getElementById('product-image-preview-img').src = dataUrl;
+      document.getElementById('product-image-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  },
+
+  clearProductImage() {
+    document.getElementById('product-image').value = '';
+    document.getElementById('product-image-input').value = '';
+    document.getElementById('product-image-preview').style.display = 'none';
+  },
+
+  saveProduct(e, productId) {
+    e.preventDefault();
+    const data = {
+      name: document.getElementById('product-name').value,
+      category: document.getElementById('product-category').value,
+      price: parseFloat(document.getElementById('product-price').value),
+      description: document.getElementById('product-description').value,
+      icon: document.getElementById('product-icon').value || '\ud83d\udce6',
+      image: document.getElementById('product-image').value || null,
+      features: document.getElementById('product-features').value.split('\n').filter(f => f.trim()),
+      status: document.getElementById('product-status').value,
+      link: document.getElementById('product-link').value.trim() || null
+    };
+
+    if (productId) {
+      const idx = this.products.findIndex(p => p.id === productId);
+      if (idx !== -1) {
+        this.products[idx] = { ...this.products[idx], ...data };
+      }
+    } else {
+      data.id = Date.now();
+      data.sales = 0;
+      this.products.push(data);
+    }
     this.saveProducts();
+    this.showToast(productId ? this.t('updated_toast') : this.t('added_toast'), 'success');
     this.showAdminSection('products');
   },
 
-  renderAdminOrders(c) {
-    c.innerHTML = `<h2>${this.t('orders_manage')}</h2>` +
-      (this.orders.length === 0 ? `<p>No orders</p>` : this.orders.map(o => `
-        <div class="order-row">${o.email} - $${o.total} - ${o.status} - ${new Date(o.date).toLocaleString()}</div>`).join(''));
+  editProduct(id) {
+    this.showAddProductForm(id);
   },
 
-  renderAdminUsers(c) {
-    const users = JSON.parse(localStorage.getItem('nove_users')) || [];
-    c.innerHTML = `<h2>${this.t('users_manage')}</h2>` +
-      (users.length === 0 ? `<p>No users</p>` : users.map(u => `
-        <div class="product-row"><span>${u.name}</span><span>${u.email}</span><span>${u.isAdmin ? '👑' : ''}</span></div>`).join(''));
+  deleteProduct(id) {
+    if (!confirm(this.t('delete_confirm'))) return;
+    this.products = this.products.filter(p => p.id !== id);
+    this.saveProducts();
+    this.showToast(this.t('deleted_toast'), 'success');
+    this.showAdminSection('products');
   },
 
-  renderAdminSettings(c) {
-    const storeName = this.STORE_NAME;
-    const paypal = this.PAYPAL_CLIENT_ID;
-    c.innerHTML = `
-      <h2>${this.t('settings_manage')}</h2>
-      <div class="form-group"><label>Store Name</label><input id="setting-store-name" value="${storeName}"></div>
-      <div class="form-group"><label>PayPal Client ID</label><input id="setting-paypal" value="${paypal}" placeholder="optional"></div>
-      <button class="btn-primary" onclick="APP.saveAdminSettings()">Save</button>
+  renderAdminOrders(content) {
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u{1F4B3}</span>
+            ${this.t('orders_manage')}
+            <div class="tb-sub">${this.t('order_success_sub')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <span class="status-badge active" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${this.orders.length} ${this.t('total_badge')}</span>
+        </div>
+      </div>
+      <div class="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>${this.t('order')}</th>
+              <th>${this.t('customer')}</th>
+              <th>${this.t('products')}</th>
+              <th>${this.t('total')}</th>
+              <th>${this.t('status')}</th>
+              <th>${this.t('date')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${this.orders.length === 0 ? `<tr><td colspan="6" style="text-align:center; color: var(--gray-500); padding: 2rem;">${this.t('no_orders')}</td></tr>` :
+              this.orders.slice().reverse().map(o => `
+                <tr>
+                  <td style="font-weight:600;">${o.id}</td>
+                  <td>
+                    <div class="cell-product">
+                      <div class="cp-icon">\u{1F464}</div>
+                      <div>
+                        <div class="cp-name">${o.userName || this.t('guest')}</div>
+                        <div class="cp-cat">${o.email}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>${o.items.map(i => i.name).slice(0,2).join(', ')}${o.items.length > 2 ? ' +' + (o.items.length-2) : ''}</td>
+                  <td style="font-weight:700;">$${o.total.toFixed(2)}</td>
+                  <td><span class="status-badge ${o.status === 'completed' ? 'active' : 'pending'}">${o.status === 'completed' ? this.t('completed') : this.t('pending')}</span></td>
+                  <td>${new Date(o.date).toLocaleDateString()}</td>
+                </tr>
+              `).join('')}
+          </tbody>
+        </table>
+      </div>
     `;
   },
 
-  saveAdminSettings() {
-    this.STORE_NAME = document.getElementById('setting-store-name').value || 'Nove Store';
-    this.PAYPAL_CLIENT_ID = document.getElementById('setting-paypal').value;
-    localStorage.setItem('nove_settings', JSON.stringify({ storeName: this.STORE_NAME, paypal: this.PAYPAL_CLIENT_ID }));
-    document.querySelectorAll('.nav-brand-text').forEach(el => { el.innerHTML = this.STORE_NAME.toUpperCase().replace(' ', '') + ' <span>STORE</span>'; });
-    this.showToast('Settings saved', 'success');
+  renderAdminUsers(content) {
+    const users = JSON.parse(localStorage.getItem('nove_users')) || [];
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u{1F465}</span>
+            ${this.t('users_manage')}
+            <div class="tb-sub">${this.t('registered_users')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <span class="status-badge active" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${users.length} ${this.t('total_badge')}</span>
+        </div>
+      </div>
+      <div class="admin-stats" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        <div class="admin-stat-card">
+          <div class="stat-header"><div class="stat-icon">\u{1F465}</div><h4>${this.t('total_users')}</h4></div>
+          <div class="value">${users.length}</div>
+          <div class="change">\u2191 ${this.t('new_signups')}</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header"><div class="stat-icon">\u{1F451}</div><h4>${this.t('admins')}</h4></div>
+          <div class="value">${users.filter(u => u.email === APP.ADMIN_EMAIL).length}</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-header"><div class="stat-icon">\u{1F001}</div><h4>${this.t('customers_label')}</h4></div>
+          <div class="value">${users.filter(u => u.email !== APP.ADMIN_EMAIL).length}</div>
+        </div>
+      </div>
+      <div class="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>${this.t('name')}</th>
+              <th>${this.t('email')}</th>
+              <th>${this.t('joined')}</th>
+              <th>${this.t('role')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${users.length === 0 ? `<tr><td colspan="4" style="text-align:center; color: var(--gray-500); padding: 2rem;">${this.t('no_orders')}</td></tr>` :
+              users.map(u => `
+                <tr>
+                  <td>
+                    <div class="cell-product">
+                      <div class="cp-icon">\u{1F464}</div>
+                      <div class="cp-name">${u.name || this.t('guest')}</div>
+                    </div>
+                  </td>
+                  <td>${u.email}</td>
+                  <td>${new Date(u.joinedAt).toLocaleDateString()}</td>
+                  <td><span class="status-badge ${u.email === APP.ADMIN_EMAIL ? 'active' : ''}" style="${u.email === APP.ADMIN_EMAIL ? '' : 'background:rgba(255,255,255,0.05); color:var(--gray-200);'}">${u.email === APP.ADMIN_EMAIL ? this.t('owner') : this.t('customer_role')}</span></td>
+                </tr>
+              `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  },
+
+  renderAdminStaff(content) {
+    if (APP.currentUser && APP.currentUser.email !== APP.ADMIN_EMAIL) {
+      this.showToast(this.t('owners_only'), 'error');
+      this.showAdminSection('dashboard');
+      return;
+    }
+    const users = JSON.parse(localStorage.getItem('nove_users')) || [];
+    const admins = users.filter(u => u.isAdmin || u.role === 'admin' || u.role === 'supervisor' || u.email === APP.ADMIN_EMAIL);
+
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u{1F451}</span>
+            ${this.t('admin_staff')}
+            <div class="tb-sub">${this.t('admin_staff_sub')}</div>
+          </h1>
+        </div>
+        <div class="admin-topbar-actions">
+          <span class="status-badge active" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${admins.length} ${this.t('admins')}</span>
+        </div>
+      </div>
+
+      <div class="admin-note" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:0.9rem 1.2rem; border-radius:10px; margin-bottom:1.5rem; font-size:0.82rem; color:var(--gray-400);">
+        \u{1F512} ${this.t('admin_note')}
+      </div>
+
+      <div class="admin-form-card" style="max-width:560px; margin-bottom:2rem;">
+        <div class="form-card-header">
+          <div class="fc-icon">\u2795</div>
+          <h3>${this.t('add_admin')}</h3>
+        </div>
+        <form onsubmit="APP.addAdmin(event)" style="display:flex; gap:0.8rem; margin:0; align-items:flex-end; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:180px;">
+            <label>${this.t('email_label')}</label>
+            <input type="email" id="add-admin-email" placeholder="staff@email.com" required>
+          </div>
+          <div class="form-group">
+            <label>${this.t('staff_role')}</label>
+            <select id="add-admin-role">
+              <option value="supervisor">${this.t('role_supervisor')}</option>
+              <option value="admin">${this.t('role_admin')}</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-admin btn-admin-primary">+ ${this.t('add_admin')}</button>
+        </form>
+        <div style="font-size:0.72rem; color:var(--gray-500); margin-top:0.8rem;">
+          \u{1F4AC} ${this.t('staff_email_hint') || 'Only registered-customer accounts can be promoted by their email.'}
+        </div>
+      </div>
+
+      <div class="admin-table">
+        <table>
+          <thead>
+            <tr>
+              <th>${this.t('name')}</th>
+              <th>${this.t('email')}</th>
+              <th>${this.t('role')}</th>
+              <th>${this.t('actions')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${admins.length === 0 ? `<tr><td colspan="4" style="text-align:center; color: var(--gray-500); padding: 2rem;">${this.t('no_staff')}</td></tr>` :
+              admins.map(u => `
+                <tr>
+                  <td>
+                    <div class="cell-product">
+                      <img src="${this.generateAvatar(u.name || 'A')}" alt="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
+                      <div class="cp-name">${u.name || this.t('guest')}</div>
+                    </div>
+                  </td>
+                  <td>${u.email}</td>
+                  <td><span class="status-badge ${u.email === APP.ADMIN_EMAIL ? 'active' : ''}" style="${u.email === APP.ADMIN_EMAIL ? '' : 'background:rgba(255,255,255,0.05); color:var(--gray-200);'}">${u.email === APP.ADMIN_EMAIL ? this.t('role_owner') : (u.role === 'supervisor' ? this.t('role_supervisor') : this.t('role_admin'))}</span></td>
+                  <td>
+                    ${u.email !== APP.ADMIN_EMAIL ? `
+                      <button class="row-btn delete" title="${this.t('remove_admin')}" onclick="APP.removeAdmin('${u.email}')">\u{1F5D1}\uFE0F</button>
+                    ` : `<span style="color:var(--gray-500); font-size:0.75rem;">\u{1F451}</span>`}
+                  </td>
+                </tr>
+              `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  },
+
+  addAdmin(e) {
+    e.preventDefault();
+    if (APP.currentUser.email !== APP.ADMIN_EMAIL) {
+      this.showToast(this.t('owners_only'), 'error');
+      return;
+    }
+    const email = document.getElementById('add-admin-email').value.trim().toLowerCase();
+    const role = document.getElementById('add-admin-role').value;
+    let users = JSON.parse(localStorage.getItem('nove_users')) || [];
+    const user = users.find(u => u.email === email);
+    if (!user) {
+      this.showToast(this.t('user_not_found') || 'User not found', 'error');
+      return;
+    }
+    user.isAdmin = true;
+    user.role = role;
+    localStorage.setItem('nove_users', JSON.stringify(users));
+    this.showToast(this.t('staff_added'), 'success');
+    this.showAdminSection('admins');
+  },
+
+  removeAdmin(email) {
+    if (APP.currentUser.email !== APP.ADMIN_EMAIL) {
+      this.showToast(this.t('owners_only'), 'error');
+      return;
+    }
+    if (!confirm(this.t('remove_admin_confirm'))) return;
+    let users = JSON.parse(localStorage.getItem('nove_users')) || [];
+    const user = users.find(u => u.email === email);
+    if (user) {
+      user.isAdmin = false;
+      user.role = 'customer';
+      localStorage.setItem('nove_users', JSON.stringify(users));
+    }
+    this.showToast(this.t('staff_removed'), 'success');
+    this.showAdminSection('admins');
+  },
+
+  renderAdminSettings(content) {
+    content.innerHTML = `
+      <div class="admin-topbar">
+        <div>
+          <h1>
+            <span class="tb-icon">\u2699\uFE0F</span>
+            ${this.t('settings_manage')}
+            <div class="tb-sub">${this.t('store_config')}</div>
+          </h1>
+        </div>
+      </div>
+
+      <div class="admin-form-card" style="max-width:760px;">
+        <div class="form-card-header">
+          <div class="fc-icon">\u{1F3E2}</div>
+          <h3>${this.t('store_config')}</h3>
+        </div>
+        <div class="form-group">
+          <label>${this.t('store_name')}</label>
+          <input type="text" value="${APP.STORE_NAME}" id="setting-store-name" placeholder="Nove Store">
+        </div>
+        <div class="form-group">
+          <label>${this.t('owner_email')}</label>
+          <input type="email" value="${APP.ADMIN_EMAIL}" placeholder="${APP.ADMIN_EMAIL}" style="opacity:0.5;" disabled>
+          <div style="font-size:0.7rem; color:var(--gray-500); margin-top:6px;">${this.t('owner_email_hint')}</div>
+        </div>
+        <div class="form-group" style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+          <label>${this.t('store_logo')}</label>
+          <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+            <div id="logo-preview" style="width:64px; height:64px; border-radius:12px; background:var(--gray-800); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+              ${APP.STORE_LOGO ? `<img src="${APP.STORE_LOGO}" alt="" style="width:100%; height:100%; object-fit:contain;">` : `<span style="color:var(--gray-500); font-weight:800;">N</span>`}
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.5rem;">
+              <label class="btn-admin btn-admin-ghost" style="cursor:pointer; text-align:center;">
+                \u{1F4C2} ${this.t('upload_logo')}
+                <input type="file" id="setting-logo" accept="image/*" onchange="APP.uploadLogo(event)" style="display:none;">
+              </label>
+              <button class="row-btn delete" onclick="APP.removeLogo()" style="${APP.STORE_LOGO ? '' : 'display:none;'}" id="remove-logo-btn">\u{1F5D1}\uFE0F ${this.t('remove_logo')}</button>
+            </div>
+          </div>
+          <div style="font-size:0.7rem; color:var(--gray-500); margin-top:6px;">${this.t('upload_logo_hint')}</div>
+        </div>
+      </div>
+
+      <div class="admin-form-card" style="margin-top:1.5rem; max-width:760px;">
+        <div class="form-card-header">
+          <div class="fc-icon">\u{1F510}</div>
+          <h3>${this.t('google_signin_setup')}</h3>
+        </div>
+        <div class="form-group">
+          <label>${this.t('google_client')}</label>
+          <input type="text" id="setting-google" value="${APP.GOOGLE_CLIENT_ID}" placeholder="xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com">
+          <div style="font-size:0.7rem; color:var(--gray-500); margin-top:6px;">${this.t('google_hint')}</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; margin-top:0.5rem;">
+          <div style="font-size:0.82rem; font-weight:600; margin-bottom:0.6rem; color:var(--gray-200);">\u{1F4CB} ${this.t('google_signin_setup')}:</div>
+          <ol style="margin:0; padding-right:1.2rem; font-size:0.75rem; color:var(--gray-400); line-height:1.8;">
+            <li>\u{1F50D} اذهب إلى <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8ab4f8;">Google Cloud Console</a></li>
+            <li>\u{1F4DD} أنشئ <strong style="color:var(--gray-200);">OAuth 2.0 Client ID</strong> من نوع <strong style="color:var(--gray-200);">Web application</strong></li>
+            <li>\u{1F310} أضف رابط موقعك في <strong style="color:var(--gray-200);">Authorized JavaScript origins</strong> (مثال: <code style="background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:4px;">https://YourSite.com</code>)</li>
+            <li>\u{1F511} انسخ الـ <strong style="color:var(--gray-200);">Client ID</strong> والصقه في الحقل أعلاه</li>
+            <li>\u{1F4BE} اضغط <strong style="color:var(--gray-200);">حفظ جميع الإعدادات</strong></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="admin-form-card" style="margin-top:1.5rem; max-width:760px;">
+        <div class="form-card-header">
+          <div class="fc-icon">\u{1F4B0}</div>
+          <h3>${this.t('paypal_integration')}</h3>
+        </div>
+        <div class="form-group">
+          <label>${this.t('paypal_client')}</label>
+          <input type="text" id="setting-paypal" value="${APP.PAYPAL_CLIENT_ID}" placeholder="AdZijgGKQiP5hkM7nWSUQgVFH4dBS8K5SuClk9n9B1NP6KHUTe84pTcjVWBF7fIe8IZ-XXxhfJ0SegzO">
+          <div style="font-size:0.7rem; color:var(--gray-500); margin-top:6px;">${this.t('paypal_hint')}</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; margin-top:0.5rem;">
+          <div style="font-size:0.82rem; font-weight:600; margin-bottom:0.6rem; color:var(--gray-200);">\u{1F4CB} ${this.t('paypal_integration')}:</div>
+          <ol style="margin:0; padding-right:1.2rem; font-size:0.75rem; color:var(--gray-400); line-height:1.8;">
+            <li>\u{1F50D} اذهب إلى <a href="https://developer.paypal.com/dashboard/applications" target="_blank" style="color:#8ab4f8;">PayPal Developer Dashboard</a></li>
+            <li>\u{1F4DD} أنشئ تطبيق جديد أو استخدم تطبيق موجود</li>
+            <li>\u{1F511} انسخ <strong style="color:var(--gray-200);">Client ID</strong> من قسم Sandbox أو Live</li>
+            <li>\u{1F310} أضف رابط موقعك في <strong style="color:var(--gray-200);">Return URL</strong></li>
+            <li>\u{1F4BE} اضغط <strong style="color:var(--gray-200);">حفظ جميع الإعدادات</strong></li>
+          </ol>
+        </div>
+      </div>
+
+      <button class="btn-admin btn-admin-primary" style="margin-top:1.5rem;" onclick="APP.saveSettings()">\u{1F4BE} ${this.t('save_all')}</button>
+    `;
+  },
+
+  uploadLogo(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      this.showToast(this.t('image_too_large'), 'error');
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      APP.STORE_LOGO = dataUrl;
+      const prev = document.getElementById('logo-preview');
+      if (prev) prev.innerHTML = `<img src="${dataUrl}" alt="" style="width:100%; height:100%; object-fit:contain;">`;
+      const btn = document.getElementById('remove-logo-btn');
+      if (btn) btn.style.display = '';
+      const settings = JSON.parse(localStorage.getItem('nove_settings')) || {};
+      settings.logo = dataUrl;
+      settings.storeName = APP.STORE_NAME;
+      settings.paypal = APP.PAYPAL_CLIENT_ID;
+      settings.google = APP.GOOGLE_CLIENT_ID;
+      localStorage.setItem('nove_settings', JSON.stringify(settings));
+      APP.applyLogo();
+      this.showToast(this.t('logo_uploaded'), 'success');
+    };
+    reader.readAsDataURL(file);
+  },
+
+  removeLogo() {
+    APP.STORE_LOGO = '';
+    const prev = document.getElementById('logo-preview');
+    if (prev) prev.innerHTML = `<span style="color:var(--gray-500); font-weight:800;">N</span>`;
+    const btn = document.getElementById('remove-logo-btn');
+    if (btn) btn.style.display = 'none';
+    APP.applyLogo();
+    this.saveSettings();
+  },
+
+  applyLogo() {
+    const brandIcon = document.querySelector('.nav-brand-icon');
+    if (APP.STORE_LOGO && brandIcon) {
+      brandIcon.style.background = 'transparent';
+      brandIcon.style.width = '48px';
+      brandIcon.style.height = '48px';
+      brandIcon.innerHTML = `<img src="${APP.STORE_LOGO}" alt="" style="width:100%; height:100%; object-fit:contain; border-radius:10px;">`;
+    } else if (brandIcon) {
+      brandIcon.style.background = '';
+      brandIcon.style.width = '';
+      brandIcon.style.height = '';
+      brandIcon.textContent = 'N';
+    }
+  },
+
+  saveSettings() {
+    APP.STORE_NAME = document.getElementById('setting-store-name').value || 'Nove Store';
+    APP.PAYPAL_CLIENT_ID = document.getElementById('setting-paypal').value;
+    APP.GOOGLE_CLIENT_ID = document.getElementById('setting-google').value || APP.GOOGLE_CLIENT_ID;
+    if (!/apps\.googleusercontent\.com$/.test(APP.GOOGLE_CLIENT_ID)) APP.GOOGLE_CLIENT_ID = '410210397515-tv7ek2artd1jlllghmk1d3493g1gurjc.apps.googleusercontent.com';
+    localStorage.setItem('nove_settings', JSON.stringify({
+      storeName: APP.STORE_NAME,
+      logo: APP.STORE_LOGO,
+      paypal: APP.PAYPAL_CLIENT_ID,
+      google: APP.GOOGLE_CLIENT_ID
+    }));
+    document.querySelectorAll('.nav-brand-text').forEach(el => {
+      el.innerHTML = APP.STORE_NAME.toUpperCase().replace(' ', '') + ' <span>STORE</span>';
+    });
+    this.applyLogo();
+    this.showToast(this.t('saved'), 'success');
+  },
+
+  // ===== NAVBAR =====
+  initNavbar() {
+    const toggle = document.querySelector('.mobile-toggle');
+    const links = document.querySelector('.nav-links');
+    if (toggle && links) {
+      toggle.addEventListener('click', () => links.classList.toggle('active'));
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.querySelector('.user-dropdown');
+      if (userMenu && dropdown && !userMenu.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+  },
+
+  initScrollEffects() {
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      if (navbar) {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+      }
+    });
+  },
+
+  // ===== TOAST =====
+  showToast(message, type = 'success') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${type === 'success' ? '\u2713' : '\u2717'}</span> ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
   }
 };
+
+document.addEventListener('DOMContentLoaded', () => APP.init());
