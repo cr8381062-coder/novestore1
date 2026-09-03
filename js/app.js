@@ -5,7 +5,6 @@ const APP = {
   STORE_NAME: 'Nove Store',
   STORE_LOGO: '',
   PAYPAL_CLIENT_ID: 'AdZijgGKQiP5hkM7nWSUQgVFH4dBS8K5SuClk9n9B1NP6KHUTe84pTcjVWBF7fIe8IZ-XXxhfJ0SegzO',
-  GOOGLE_CLIENT_ID: '410210397515-tv7ek2artd1jlllghmk1d3493g1gurjc.apps.googleusercontent.com',
 
   currentUser: null,
   products: [],
@@ -66,7 +65,6 @@ const APP = {
       remove: 'حذف',
       signin_title: 'أهلاً بك في Nove Store',
       signin_desc: 'سجل دخولك لتتمكن من الشراء وإدارة طلباتك',
-      google_signin: 'تسجيل الدخول عبر جوجل',
       terms_note: 'بموجب تسجيل الدخول فأنت توافق على شروط الخدمة وسياسة الخصوصية',
       tab_login: 'تسجيل الدخول',
       tab_register: 'إنشاء حساب',
@@ -191,9 +189,6 @@ const APP = {
       paypal_integration: 'تكامل باي بال',
       paypal_client: 'مفتاح باي بال العام',
       paypal_hint: 'متوفر في لوحة مطوري باي بال. تصل المدفوعات إلى حسابك.',
-      google_signin_setup: 'تسجيل الدخول عبر جوجل',
-      google_client: 'مفتاح جوجل العام',
-      google_hint: 'مطلوب لتسجيل الدخول عبر جوجل. متوفر في Google Cloud Console.',
       save_all: 'حفظ جميع الإعدادات',
       edit_product: 'تعديل المنتج',
       order_success_sub: 'تتبع مبيعاتك وسجل الطلبات',
@@ -294,7 +289,6 @@ const APP = {
       remove: 'Remove',
       signin_title: 'Welcome to Nove Store',
       signin_desc: 'Sign in to make purchases and manage your orders',
-      google_signin: 'Sign in with Google',
       terms_note: 'By signing in, you agree to our Terms of Service and Privacy Policy',
       tab_login: 'Login',
       tab_register: 'Register',
@@ -419,9 +413,6 @@ const APP = {
       paypal_integration: 'PayPal Integration',
       paypal_client: 'PayPal Client ID',
       paypal_hint: 'Found in PayPal Developer dashboard. Payments go to your account.',
-      google_signin_setup: 'Google Sign-In',
-      google_client: 'Google Client ID',
-      google_hint: 'Required for Google login. Available in Google Cloud Console.',
       save_all: 'Save All Settings',
       edit_product: 'Edit Product',
       order_success_sub: 'Track your sales and order history',
@@ -553,8 +544,6 @@ const APP = {
     if (settings.storeName) this.STORE_NAME = settings.storeName;
     if (settings.logo) this.STORE_LOGO = settings.logo;
     if (settings.paypal && settings.paypal !== 'YOUR_PAYPAL_CLIENT_ID') this.PAYPAL_CLIENT_ID = settings.paypal;
-    // Always force the correct Google Client ID, overriding any stale saved value.
-    settings.google = this.GOOGLE_CLIENT_ID;
     localStorage.setItem('nove_settings', JSON.stringify(settings));
   },
 
@@ -680,22 +669,6 @@ const APP = {
     }
   },
 
-  finishGoogleLogin(googleUser) {
-    this.currentUser = {
-      id: googleUser.sub || 'google_' + Date.now(),
-      name: googleUser.name || 'Google User',
-      email: googleUser.email || '',
-      avatar: googleUser.picture || '',
-      isAdmin: googleUser.email === this.ADMIN_EMAIL,
-      joinedAt: new Date().toISOString()
-    };
-    this.registerUser(this.currentUser);
-    localStorage.setItem('nove_user', JSON.stringify(this.currentUser));
-    this.updateAuthUI();
-    this.closeModal('auth-modal');
-    this.showToast(this.t('welcome') + ', ' + this.currentUser.name + '!', 'success');
-  },
-
   showAuthTab(tab) {
     document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
     document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
@@ -778,65 +751,6 @@ const APP = {
     this.updateAuthUI();
     this.closeModal('auth-modal');
     this.showToast(this.t('welcome') + ', ' + user.name + '!', 'success');
-  },
-
-  loginWithGoogle() {
-    const configured = this.GOOGLE_CLIENT_ID && this.GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID';
-    if (!configured) {
-      this.showToast(this.t('google_hint'), 'error');
-      this.demoLogin();
-      return;
-    }
-    if (!window.google || !window.google.accounts) {
-      this.showToast('Loading Google Sign-In...', 'success');
-      this.loadGoogleSDK();
-      return;
-    }
-    window.google.accounts.id.initialize({
-      client_id: this.GOOGLE_CLIENT_ID,
-      callback: (response) => {
-        try {
-          const payload = JSON.parse(atob(response.credential.split('.')[1]));
-          this.finishGoogleLogin({
-            sub: payload.sub,
-            name: payload.name || payload.email.split('@')[0],
-            email: payload.email,
-            picture: payload.picture || ''
-          });
-        } catch (e) {
-          this.showToast('Failed to read Google account', 'error');
-        }
-      }
-    });
-    window.google.accounts.id.prompt();
-  },
-
-  loadGoogleSDK() {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.onload = () => this.loginWithGoogle();
-    script.onerror = () => { this.showToast('Unable to load Google Sign-In', 'error'); this.demoLogin(); };
-    document.body.appendChild(script);
-  },
-
-  demoLogin() {
-    this.showToast('Google not configured - using demo login', 'error');
-    if (confirm('Demo Mode: Login as a regular test user? (Click OK to continue as a normal customer)')) {
-      this.currentUser = {
-        id: 'user_' + Date.now(),
-        name: 'Test User',
-        email: 'user_' + Date.now() + '@demo.nove',
-        avatar: '',
-        isAdmin: false,
-        joinedAt: new Date().toISOString()
-      };
-    } else {
-      return;
-    }
-    this.registerUser(this.currentUser);
-    localStorage.setItem('nove_user', JSON.stringify(this.currentUser));
-    this.updateAuthUI();
-    this.closeModal('auth-modal');
   },
 
   logout() {
@@ -2010,28 +1924,6 @@ const APP = {
 
       <div class="admin-form-card" style="margin-top:1.5rem; max-width:760px;">
         <div class="form-card-header">
-          <div class="fc-icon">\u{1F510}</div>
-          <h3>${this.t('google_signin_setup')}</h3>
-        </div>
-        <div class="form-group">
-          <label>${this.t('google_client')}</label>
-          <input type="text" id="setting-google" value="${APP.GOOGLE_CLIENT_ID}" placeholder="xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com">
-          <div style="font-size:0.7rem; color:var(--gray-500); margin-top:6px;">${this.t('google_hint')}</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; margin-top:0.5rem;">
-          <div style="font-size:0.82rem; font-weight:600; margin-bottom:0.6rem; color:var(--gray-200);">\u{1F4CB} ${this.t('google_signin_setup')}:</div>
-          <ol style="margin:0; padding-right:1.2rem; font-size:0.75rem; color:var(--gray-400); line-height:1.8;">
-            <li>\u{1F50D} اذهب إلى <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#8ab4f8;">Google Cloud Console</a></li>
-            <li>\u{1F4DD} أنشئ <strong style="color:var(--gray-200);">OAuth 2.0 Client ID</strong> من نوع <strong style="color:var(--gray-200);">Web application</strong></li>
-            <li>\u{1F310} أضف رابط موقعك في <strong style="color:var(--gray-200);">Authorized JavaScript origins</strong> (مثال: <code style="background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:4px;">https://YourSite.com</code>)</li>
-            <li>\u{1F511} انسخ الـ <strong style="color:var(--gray-200);">Client ID</strong> والصقه في الحقل أعلاه</li>
-            <li>\u{1F4BE} اضغط <strong style="color:var(--gray-200);">حفظ جميع الإعدادات</strong></li>
-          </ol>
-        </div>
-      </div>
-
-      <div class="admin-form-card" style="margin-top:1.5rem; max-width:760px;">
-        <div class="form-card-header">
           <div class="fc-icon">\u{1F4B0}</div>
           <h3>${this.t('paypal_integration')}</h3>
         </div>
@@ -2076,7 +1968,6 @@ const APP = {
       settings.logo = dataUrl;
       settings.storeName = APP.STORE_NAME;
       settings.paypal = APP.PAYPAL_CLIENT_ID;
-      settings.google = APP.GOOGLE_CLIENT_ID;
       localStorage.setItem('nove_settings', JSON.stringify(settings));
       APP.applyLogo();
       this.showToast(this.t('logo_uploaded'), 'success');
@@ -2112,13 +2003,10 @@ const APP = {
   saveSettings() {
     APP.STORE_NAME = document.getElementById('setting-store-name').value || 'Nove Store';
     APP.PAYPAL_CLIENT_ID = document.getElementById('setting-paypal').value;
-    APP.GOOGLE_CLIENT_ID = document.getElementById('setting-google').value || APP.GOOGLE_CLIENT_ID;
-    if (!/apps\.googleusercontent\.com$/.test(APP.GOOGLE_CLIENT_ID)) APP.GOOGLE_CLIENT_ID = '410210397515-tv7ek2artd1jlllghmk1d3493g1gurjc.apps.googleusercontent.com';
     localStorage.setItem('nove_settings', JSON.stringify({
       storeName: APP.STORE_NAME,
       logo: APP.STORE_LOGO,
-      paypal: APP.PAYPAL_CLIENT_ID,
-      google: APP.GOOGLE_CLIENT_ID
+      paypal: APP.PAYPAL_CLIENT_ID
     }));
     document.querySelectorAll('.nav-brand-text').forEach(el => {
       el.innerHTML = APP.STORE_NAME.toUpperCase().replace(' ', '') + ' <span>STORE</span>';

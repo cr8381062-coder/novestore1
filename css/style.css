@@ -1197,7 +1197,7 @@ body::before {
 .auth-form .form-group input:focus {
   border-color: var(--primary);
 }
-.auth-google-btn {
+.auth-submit-btn {
   width: 100%;
   padding: 14px;
   background: var(--white);
@@ -1215,11 +1215,11 @@ body::before {
   transition: all 0.3s ease;
 }
 
-.auth-google-btn:hover {
+.auth-submit-btn:hover {
   background: var(--gray-200);
 }
 
-.auth-google-btn img {
+.auth-submit-btn img {
   width: 20px;
   height: 20px;
 }
