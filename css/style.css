@@ -2568,3 +2568,138 @@ body::before {
 .category-filters .filter-btn[data-filter]:not([data-filter="all"]):not([data-filter="fivem"]):not([data-filter="discord"]) {
   border-style: dashed;
 }
+
+/* ===== USERS MANAGEMENT (new) ===== */
+.users-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  max-width: 860px;
+  margin-top: 1.5rem;
+}
+.users-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.users-card-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.users-table {
+  display: flex;
+  flex-direction: column;
+}
+.users-table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-400);
+}
+.users-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.users-row:last-child {
+  border-bottom: none;
+}
+.users-id {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 240px;
+}
+.users-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  background: var(--bg2);
+  flex-shrink: 0;
+}
+.users-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.users-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.users-email {
+  font-size: 0.8rem;
+  color: var(--gray-400);
+  direction: ltr;
+  text-align: right;
+}
+.role-group {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.role-btn {
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--gray-300);
+  padding: 0.4rem 0.85rem;
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: inherit;
+}
+.role-btn:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+.role-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.role-btn.active {
+  background: var(--gradient);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(88,101,242,0.35);
+}
+.role-btn.role-user.active {
+  background: var(--secondary);
+  box-shadow: 0 4px 14px rgba(34,211,238,0.3);
+}
+.role-btn.role-moderator.active {
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  box-shadow: 0 4px 14px rgba(34,197,94,0.3);
+}
+.role-btn.role-admin.active {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  box-shadow: 0 4px 14px rgba(249,115,22,0.3);
+}
+.role-btn.role-owner.active {
+  background: linear-gradient(135deg, #8b5cf6, #d946ef);
+  box-shadow: 0 4px 14px rgba(217,70,239,0.35);
+}
+.users-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--gray-500);
+}

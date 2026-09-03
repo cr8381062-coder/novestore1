@@ -1421,7 +1421,6 @@ const APP = {
     else if (section === 'categories') this.renderAdminCategories(content);
     else if (section === 'orders') this.renderAdminOrders(content);
     else if (section === 'users') this.renderAdminUsers(content);
-    else if (section === 'admins') this.renderAdminStaff(content);
     else if (section === 'settings') this.renderAdminSettings(content);
     else this.renderAdminDashboard();
 
@@ -1695,6 +1694,20 @@ const APP = {
 
   renderAdminUsers(content) {
     const users = JSON.parse(localStorage.getItem('nove_users')) || [];
+    const getRole = (u) => {
+      if (u.email === APP.ADMIN_EMAIL) return 'owner';
+      return u.role === 'moderator' || u.role === 'admin' ? u.role : 'user';
+    };
+    const setRole = (email, role) => {
+      const list = JSON.parse(localStorage.getItem('nove_users')) || [];
+      const target = list.find(u => u.email === email);
+      if (target && target.email !== APP.ADMIN_EMAIL) {
+        target.role = role;
+        localStorage.setItem('nove_users', JSON.stringify(list));
+      }
+      APP.renderAdminUsers(document.getElementById('admin-content'));
+      APP.showToast('Role updated', 'success');
+    };
     content.innerHTML = `
       <div class="admin-topbar">
         <div>
@@ -1708,174 +1721,44 @@ const APP = {
           <span class="status-badge active" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${users.length} ${this.t('total_badge')}</span>
         </div>
       </div>
-      <div class="admin-stats" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-        <div class="admin-stat-card">
-          <div class="stat-header"><div class="stat-icon">\u{1F465}</div><h4>${this.t('total_users')}</h4></div>
-          <div class="value">${users.length}</div>
-          <div class="change">\u2191 ${this.t('new_signups')}</div>
+
+      <div class="users-card">
+        <div class="users-card-header">
+          <h3>\u{1F465} ${this.t('users_list')}</h3>
+          <span class="status-badge active" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${users.length}</span>
         </div>
-        <div class="admin-stat-card">
-          <div class="stat-header"><div class="stat-icon">\u{1F451}</div><h4>${this.t('admins')}</h4></div>
-          <div class="value">${users.filter(u => u.email === APP.ADMIN_EMAIL).length}</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="stat-header"><div class="stat-icon">\u{1F001}</div><h4>${this.t('customers_label')}</h4></div>
-          <div class="value">${users.filter(u => u.email !== APP.ADMIN_EMAIL).length}</div>
-        </div>
-      </div>
-      <div class="admin-table">
-        <table>
-          <thead>
-            <tr>
-              <th>${this.t('name')}</th>
-              <th>${this.t('email')}</th>
-              <th>${this.t('joined')}</th>
-              <th>${this.t('role')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${users.length === 0 ? `<tr><td colspan="4" style="text-align:center; color: var(--gray-500); padding: 2rem;">${this.t('no_orders')}</td></tr>` :
-              users.map(u => `
-                <tr>
-                  <td>
-                    <div class="cell-product">
-                      <div class="cp-icon">\u{1F464}</div>
-                      <div class="cp-name">${u.name || this.t('guest')}</div>
+        <div class="users-table" dir="rtl">
+          <div class="users-table-head">
+            <span>${this.t('name')}</span>
+            <span>${this.t('authority')}</span>
+          </div>
+          ${users.length === 0
+            ? `<div class="users-empty">${this.t('no_users')}</div>`
+            : users.map(u => {
+                const role = getRole(u);
+                const isOwner = role === 'owner';
+                const avatar = u.avatar ? u.avatar : APP.generateAvatar((u.name||'U')[0].toUpperCase());
+                return `
+                  <div class="users-row">
+                    <div class="users-id">
+                      <img class="users-avatar" src="${avatar}" alt="">
+                      <div class="users-meta">
+                        <span class="users-name">${u.name || this.t('guest')}</span>
+                        <span class="users-email">${u.email}</span>
+                      </div>
                     </div>
-                  </td>
-                  <td>${u.email}</td>
-                  <td>${new Date(u.joinedAt).toLocaleDateString()}</td>
-                  <td><span class="status-badge ${u.email === APP.ADMIN_EMAIL ? 'active' : ''}" style="${u.email === APP.ADMIN_EMAIL ? '' : 'background:rgba(255,255,255,0.05); color:var(--gray-200);'}">${u.email === APP.ADMIN_EMAIL ? this.t('owner') : this.t('customer_role')}</span></td>
-                </tr>
-              `).join('')}
-          </tbody>
-        </table>
+                    <div class="role-group">
+                      ${['user','moderator','admin','owner'].map(r => `
+                        <button class="role-btn ${role === r ? 'active role-'+r : ''}" ${isOwner && r !== 'owner' ? 'disabled' : ''} onclick="APP.__setUserRole('${u.email}', '${r}')">
+                          ${r === 'user' ? '\u{1F464} User' : r === 'moderator' ? '\u{1F6E1} Moderator' : r === 'admin' ? '\u{2699} Admin' : '\u{1F451} Owner'}
+                        </button>`).join('')}
+                    </div>
+                  </div>`;
+              }).join('')}
+        </div>
       </div>
     `;
-  },
-
-  renderAdminStaff(content) {
-    if (APP.currentUser && APP.currentUser.email !== APP.ADMIN_EMAIL) {
-      this.showToast(this.t('owners_only'), 'error');
-      this.showAdminSection('dashboard');
-      return;
-    }
-    const users = JSON.parse(localStorage.getItem('nove_users')) || [];
-    const admins = users.filter(u => u.isAdmin || u.role === 'admin' || u.role === 'supervisor' || u.email === APP.ADMIN_EMAIL);
-
-    content.innerHTML = `
-      <div class="admin-topbar">
-        <div>
-          <h1>
-            <span class="tb-icon">\u{1F451}</span>
-            ${this.t('admin_staff')}
-            <div class="tb-sub">${this.t('admin_staff_sub')}</div>
-          </h1>
-        </div>
-        <div class="admin-topbar-actions">
-          <span class="status-badge active" style="background:rgba(255,255,255,0.05); color:var(--gray-200);">${admins.length} ${this.t('admins')}</span>
-        </div>
-      </div>
-
-      <div class="admin-note" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:0.9rem 1.2rem; border-radius:10px; margin-bottom:1.5rem; font-size:0.82rem; color:var(--gray-400);">
-        \u{1F512} ${this.t('admin_note')}
-      </div>
-
-      <div class="admin-form-card" style="max-width:560px; margin-bottom:2rem;">
-        <div class="form-card-header">
-          <div class="fc-icon">\u2795</div>
-          <h3>${this.t('add_admin')}</h3>
-        </div>
-        <form onsubmit="APP.addAdmin(event)" style="display:flex; gap:0.8rem; margin:0; align-items:flex-end; flex-wrap:wrap;">
-          <div class="form-group" style="flex:1; min-width:180px;">
-            <label>${this.t('email_label')}</label>
-            <input type="email" id="add-admin-email" placeholder="staff@email.com" required>
-          </div>
-          <div class="form-group">
-            <label>${this.t('staff_role')}</label>
-            <select id="add-admin-role">
-              <option value="supervisor">${this.t('role_supervisor')}</option>
-              <option value="admin">${this.t('role_admin')}</option>
-            </select>
-          </div>
-          <button type="submit" class="btn-admin btn-admin-primary">+ ${this.t('add_admin')}</button>
-        </form>
-        <div style="font-size:0.72rem; color:var(--gray-500); margin-top:0.8rem;">
-          \u{1F4AC} ${this.t('staff_email_hint') || 'Only registered-customer accounts can be promoted by their email.'}
-        </div>
-      </div>
-
-      <div class="admin-table">
-        <table>
-          <thead>
-            <tr>
-              <th>${this.t('name')}</th>
-              <th>${this.t('email')}</th>
-              <th>${this.t('role')}</th>
-              <th>${this.t('actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${admins.length === 0 ? `<tr><td colspan="4" style="text-align:center; color: var(--gray-500); padding: 2rem;">${this.t('no_staff')}</td></tr>` :
-              admins.map(u => `
-                <tr>
-                  <td>
-                    <div class="cell-product">
-                      <img src="${this.generateAvatar(u.name || 'A')}" alt="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
-                      <div class="cp-name">${u.name || this.t('guest')}</div>
-                    </div>
-                  </td>
-                  <td>${u.email}</td>
-                  <td><span class="status-badge ${u.email === APP.ADMIN_EMAIL ? 'active' : ''}" style="${u.email === APP.ADMIN_EMAIL ? '' : 'background:rgba(255,255,255,0.05); color:var(--gray-200);'}">${u.email === APP.ADMIN_EMAIL ? this.t('role_owner') : (u.role === 'supervisor' ? this.t('role_supervisor') : this.t('role_admin'))}</span></td>
-                  <td>
-                    ${u.email !== APP.ADMIN_EMAIL ? `
-                      <button class="row-btn delete" title="${this.t('remove_admin')}" onclick="APP.removeAdmin('${u.email}')">\u{1F5D1}\uFE0F</button>
-                    ` : `<span style="color:var(--gray-500); font-size:0.75rem;">\u{1F451}</span>`}
-                  </td>
-                </tr>
-              `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
-  },
-
-  addAdmin(e) {
-    e.preventDefault();
-    if (APP.currentUser.email !== APP.ADMIN_EMAIL) {
-      this.showToast(this.t('owners_only'), 'error');
-      return;
-    }
-    const email = document.getElementById('add-admin-email').value.trim().toLowerCase();
-    const role = document.getElementById('add-admin-role').value;
-    let users = JSON.parse(localStorage.getItem('nove_users')) || [];
-    const user = users.find(u => u.email === email);
-    if (!user) {
-      this.showToast(this.t('user_not_found') || 'User not found', 'error');
-      return;
-    }
-    user.isAdmin = true;
-    user.role = role;
-    localStorage.setItem('nove_users', JSON.stringify(users));
-    this.showToast(this.t('staff_added'), 'success');
-    this.showAdminSection('admins');
-  },
-
-  removeAdmin(email) {
-    if (APP.currentUser.email !== APP.ADMIN_EMAIL) {
-      this.showToast(this.t('owners_only'), 'error');
-      return;
-    }
-    if (!confirm(this.t('remove_admin_confirm'))) return;
-    let users = JSON.parse(localStorage.getItem('nove_users')) || [];
-    const user = users.find(u => u.email === email);
-    if (user) {
-      user.isAdmin = false;
-      user.role = 'customer';
-      localStorage.setItem('nove_users', JSON.stringify(users));
-    }
-    this.showToast(this.t('staff_removed'), 'success');
-    this.showAdminSection('admins');
+    APP.__setUserRole = setRole;
   },
 
   renderAdminSettings(content) {
